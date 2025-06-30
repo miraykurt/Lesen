@@ -1,0 +1,2188 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Alte Sorten – Lesemappe</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f0f4f8;
+      color: #2c3e50;
+      animation: fadeIn 1s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .overlay {
+      background-color: rgba(255, 255, 255, 0.95);
+      max-width: 1000px;
+      margin: auto;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.1);
+      margin-top: 60px;
+      transition: transform 0.3s ease;
+    }
+
+    .title-page {
+      text-align: center;
+    }
+
+    .title-page h1 {
+      font-family: Georgia, serif;
+      font-size: 3em;
+      color: #1abc9c;
+      margin: 10px 0;
+    }
+
+    .subtitle {
+      font-size: 1.2em;
+      color: #555;
+    }
+
+    .quote {
+      font-style: italic;
+      margin: 25px 0;
+      color: #444;
+    }
+
+    .start-layout {
+      display: flex;
+      gap: 40px;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+
+    .start-text {
+      flex: 1 1 55%;
+    }
+
+    .start-bild {
+      flex: 1 1 35%;
+      text-align: center;
+    }
+
+    .start-bild img {
+      width: 100%;
+      max-width: 300px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      transition: transform 0.4s ease;
+    }
+
+    .start-bild img:hover {
+      transform: scale(1.03);
+    }
+
+    .start-text p {
+      font-size: 1.1em;
+      line-height: 1.6;
+      margin-bottom: 15px;
+    }
+
+    .cta-button {
+      display: inline-block;
+      padding: 16px 36px;
+      background-color: #1abc9c;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.4em;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 30px;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .cta-button:hover {
+      background-color: #16a085;
+      transform: scale(1.05);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    }
+
+    .kapitel {
+      display: none;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.4s ease;
+      background-color: rgba(255, 255, 255, 0.95);
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      max-width: 900px;
+      margin: 40px auto;
+    }
+
+    .kapitel.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .kapitel-fade-out {
+      opacity: 0 !important;
+      transform: translateY(10px) !important;
+    }
+
+    #kapitel-navigation, #kapitel-controls {
+      display: none;
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    #kapitel-navigation button {
+      padding: 12px 24px;
+      background-color: #1abc9c;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      font-size: 1em;
+      cursor: pointer;
+      margin: 5px;
+      transition: background-color 0.3s ease;
+    }
+
+    #kapitel-navigation button:hover {
+      background-color: #16a085;
+    }
+
+    #kapitel-controls button {
+      padding: 10px 20px;
+      background-color: #ecf0f1;
+      color: #2c3e50;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 0.95em;
+      cursor: pointer;
+      margin: 5px;
+      transition: background-color 0.3s ease;
+    }
+
+    #kapitel-controls button:hover {
+      background-color: #dfe6e9;
+    }
+
+    .info-box {
+      background-color: #fdfdfd;
+      border-left: 5px solid #1abc9c;
+      padding: 20px 25px;
+      border-radius: 12px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.05);
+      margin-top: 20px;
+    }
+
+    .info-box p {
+      margin-bottom: 16px;
+      line-height: 1.6;
+      font-size: 1.05em;
+    }
+
+    #drag-container {
+      display: flex;
+      justify-content: space-between;
+      gap: 30px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+
+    .dropzone {
+      flex: 1 1 45%;
+      min-height: 200px;
+      border: 2px dashed #ccc;
+      border-radius: 10px;
+      padding: 15px;
+      background-color: #f9f9f9;
+      transition: background-color 0.3s ease;
+    }
+
+    .dropzone h3 {
+      text-align: center;
+      margin-top: 0;
+    }
+
+    #word-bank {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    #word-bank p,
+    .dropzone p {
+      padding: 10px 15px;
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      cursor: grab;
+      margin: 0;
+    }
+
+    .dropzone p {
+      cursor: default;
+    }
+
+    @media (max-width: 700px) {
+      .start-layout {
+        flex-direction: column;
+      }
+    }
+
+
+  .sticky-note {
+            background: #f0f9f0;
+            color: #2c3e50;
+            padding: 30px;
+            margin: 25px 30px;
+            border-radius: 12px;
+            position: relative;
+            font-style: italic;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border-left: 5px solid #27ae60;
+            transition: all 0.3s ease;
+        }
+  .sticky-note:hover {
+            transform: translateX(5px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+        }
+
+        .sticky-note::before {
+            content: "💬";
+            font-size: 1.4em;
+            position: absolute;
+            top: 12px;
+            right: 18px;
+            opacity: 0.6;
+        }
+
+        .sticky-note p {
+            font-size: 1.05em;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .sticky-note p:last-child {
+            margin-bottom: 0;
+        }      
+  
+  .zusammenfassung::before {
+            content: "📖";
+            font-size: 1.5em;
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            opacity: 0.6;
+        }
+  .zusammenfassung p {
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+  .zusammenfassung p:last-child {
+            margin-bottom: 0;
+        }
+
+  .frage-box {
+            padding: 30px;
+            background: #f8f9fa;
+            border-left: 5px solid #483D8B;
+            position: relative;
+        }
+  .frage-box strong {
+            color: #000080;
+            font-size: 1.2em;
+            display: block;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .frage-box::before {
+            content: "";
+            font-size: 1.3em;
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            opacity: 0.6;
+        }
+  textarea {
+            width: 100%;
+            padding: 18px;
+            border-radius: 10px;
+            border: 2px solid #e0e6ed;
+            font-size: 1em;
+            font-family: 'Segoe UI', sans-serif;
+            resize: vertical;
+            transition: all 0.3s ease;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #1abc9c;
+            box-shadow: 0 0 0 3px rgba(26, 188, 156, 0.1);
+            transform: translateY(-1px);
+        }
+
+        textarea::placeholder {
+            color: #95a5a6;
+            font-style: italic;
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 4px;
+            background: linear-gradient(90deg, #1abc9c, #16a085);
+            z-index: 1000;
+            transition: width 0.3s ease;
+        }
+
+        .floating-nav {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #1abc9c;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 16px 22px;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(26, 188, 156, 0.3);
+            transition: all 0.3s ease;
+            font-size: 1.1em;
+        }
+
+        .floating-nav:hover {
+            background: #16a085;
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 25px rgba(26, 188, 156, 0.4);
+        }
+
+        .save-indicator {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            background: #27ae60;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 25px;
+            opacity: 0;
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+            box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+        }
+
+        .save-indicator.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px 15px;
+            }
+            
+            .header {
+                padding: 35px 25px;
+            }
+            
+            .header h1 {
+                font-size: 2.2em;
+            }
+            
+            .zusammenfassung, .frage-box {
+                padding: 25px;
+            }
+            
+            .sticky-note {
+                margin: 20px 15px;
+                padding: 25px;
+            }
+
+            .floating-nav {
+                bottom: 20px;
+                right: 20px;
+                padding: 14px 18px;
+            }
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Erweiterte Hover-Effekte */
+        .section {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(26, 188, 156, 0.03), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .section:hover::before {
+            left: 100%;
+        }
+
+        /* Verbesserter Scroll-Indikator */
+        .progress-bar {
+            background: linear-gradient(90deg, #1abc9c 0%, #16a085 50%, #2ecc71 100%);
+            height: 3px;
+        }
+
+        /* Responsive Verbesserungen */
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .header p {
+                font-size: 1em;
+            }
+            
+            textarea {
+                padding: 15px;
+                font-size: 16px; /* Verhindert Zoom auf iOS */
+            }
+        }
+            
+        .figuren-tabelle {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 2rem;
+          margin-top: 1rem;
+        }
+
+        .figur {
+          flex: 1 1 300px;
+          background-color: #fefefe;
+          border-left: 5px solid #88a;
+          border-radius: 0.8rem;
+          padding: 1rem;
+          box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+
+        .figur h4 {
+          margin-top: 0;
+          font-size: 1.2rem;
+          color: #334;
+        }
+
+        .figur table {
+          width: 100%;
+          border-collapse: collapse;
+        }
+
+        .figur th {
+          text-align: left;
+          width: 30%;
+          color: #555;
+          padding: 0.4rem 0.5rem 0.4rem 0;
+          vertical-align: top;
+        }
+
+        .figur td {
+          padding: 0.4rem 0;
+        }
+
+        .kapitel-einstieg {
+          text-align: center;
+          font-size: 2em;
+          margin-top: 1em;
+        }
+
+       .save-buttons {
+  text-align: center;
+  margin-top: 2em;
+}
+
+.speicher-button {
+  font-size: 1.2em;
+  font-weight: bold;
+  padding: 12px 24px;
+  background-color: #ff4444;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.speicher-button:hover {
+  background-color: #cc0000;
+  transform: scale(1.05);
+  cursor: pointer;
+}
+
+
+
+
+  </style>
+</head>
+</script>
+
+<body>
+
+  <div id="pw-overlay" style="position: fixed; inset: 0; background: #f8f9fa; z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column;">
+  <h2 style="font-family: sans-serif; margin-bottom: 1em;">🔒 Zugriff geschützt</h2>
+  <input id="pw-input" type="password" placeholder="Passwort eingeben" style="padding: 12px 20px; font-size: 1em; border-radius: 8px; border: 1px solid #ccc;">
+  <button onclick="checkPassword()" style="margin-top: 1em; padding: 10px 20px; font-size: 1em; border: none; background: #1abc9c; color: white; border-radius: 6px;">🔓 Entsperren</button>
+  <p id="pw-error" style="color: red; font-family: sans-serif; margin-top: 1em;"></p>
+</div>
+
+<script>
+  function checkPassword() {
+    const input = document.getElementById('pw-input').value;
+    if (input === "lesen2025") {
+      document.getElementById('pw-overlay').style.display = 'none';
+    } else {
+      document.getElementById('pw-error').textContent = "Falsches Passwort. Bitte erneut versuchen.";
+    }
+  }
+</script>
+
+<!-- Startseite -->
+<section id="start" class="kapitel active">
+  <div class="overlay">
+    <div class="title-page">
+      <h1>Lesemappe – "Alte Sorten"</h1>
+      <p class="subtitle">von Ewald Arenz</p>
+      <p class="quote">„In jedem guten Buch steckt ein neues Stück von uns selbst.“</p>
+    </div>
+
+    <div class="start-layout">
+      <div class="start-text">
+        <p>👋 <strong>Hey, schön dass du da bist!</strong></p>
+        <p>Ich bin Miray, 23 Jahre alt, und ich habe diese Lesemappe im Rahmen des Projekts <em>„KonTEXT“</em> für dich zusammengestellt.</p>
+        <p>Lesen bedeutet mir viel – Bücher sind für mich wie kleine Reisen in neue Gedankenwelten.</p>
+        <p>Danke, dass du dich für diese Lesemappe entschieden hast! Viel Freude beim Lesen, Schreiben und Entdecken! 📚</p>
+        <div style="text-align: left;">
+          <a class="cta-button" href="#" onclick="starteLesemappe()">📖 Jetzt starten ➜</a>
+        </div>
+      </div>
+      <div class="start-bild">
+        <img src="bild.png" alt="Obstbaum Landschaft">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Navigation -->
+<div id="kapitel-navigation">
+  <button onclick="zeigeKapitel('infos')">Infos</button>
+  <button onclick="zeigeKapitel('einstieg')">Einstiegsaufgabe</button>
+  <button onclick="zeigeKapitel('Ankunft')"> Ankunft </button>
+  <button onclick="zeigeKapitel('Annäherung')">Annäherung</button>
+  <button onclick="zeigeKapitel('Vertrauen')">Vertrauen</button>
+  <button onclick="zeigeKapitel('Rückkehr')">Rückkehr</button>
+  <button onclick="zeigeKapitel('Feedback')">Feedback & Speichern</button>
+
+</div>
+
+<!-- Kapitel: Infos -->
+<section id="infos" class="kapitel">
+
+  <!-- Titelbild -->
+<div style="text-align: center; margin-bottom: 1.5em;">
+  <img src="bild.png" alt="Titelbild: Alte Sorten" style="width: 200px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+</div>
+
+    <h2>📝 Umgang mit der Lesemappe</h2>
+    <div class="info-box">
+      <p>Diese Lesemappe bietet dir die Möglichkeit, deine eigenen <strong>Gedanken, Ideen und Eindrücke</strong> festzuhalten.</p>
+      <p>Du findest darin verschiedenste Fragen, Zitate aus dem Buch und Anregungen zum Schreiben oder Nachdenken.</p>
+      <p>Zu Beginn erwartet dich eine kleine Einstiegsaufgabe. Anschließend begleiten dich vier Kapitel durch die Geschichte: Ankunft, Annäherung, Vertrauen und Rückkehr.
+          Die grünen Kästen enthalten Originalzitate aus dem Buch. Zusätzlich findest du dazu passende Fragen, die du gerne beantworten darfst.</p>
+      <p>Es geht nicht darum, alles „richtig“ zu machen – sondern darum, deinen eigenen Zugang zum Buch zu finden.</p>
+      <p>Vielleicht erkennst du dich in manchen Szenen wieder, entdeckst neue Perspektiven oder stellst dir Fragen, über die du bisher noch nie nachgedacht hast.</p>
+    </div>
+  
+    <h2>🔍 Was dich erwartet</h2>
+    <div class="info-box">
+      <p>Zwei Frauen – wie sie unterschiedlicher kaum sein könnten – begegnen sich zufällig in einem abgelegenen Weindorf.</p>
+    
+      <p>Inmitten von knorrigen Apfelbäumen und herbstlicher Landschaft entfaltet sich eine Geschichte über <strong>Vertrauen, Verletzlichkeit</strong> – und die Kraft des Neuanfangs.</p>
+      <p>„Alte Sorten“ ist ein stiller, intensiver Roman, der mit leisen Tönen große Fragen stellt:  
+        <strong>Wer bin ich – und wer darf ich sein?</strong></p>
+    </div>
+
+<h2>Figurenbeschreibung</h2>
+<div class="figuren-tabelle">
+  <div class="figur">
+    <h4>Sally 👧🏽</h4>
+    <table>
+      <tr>
+        <th>Alter</th>
+        <td>17 Jahre</td>
+      </tr>
+      <tr>
+        <th>Herkunft</th>
+        <td>Unklar, kommt aus einer Klinik</td>
+      </tr>
+      <tr>
+        <th>Zitat</th>
+        <td>„Ich will, dass die mich einfach in Ruhe lassen und dass die nicht immer noch mal und noch mal und noch mal an mir rumspielen …“</td>
+      </tr>
+        <th>Charakter</th>
+  <td>
+    <label for="charakter-sally"></label><br>
+    <textarea id="charakter-sally" name="charakter-sally" rows="3" cols="40" placeholder="Wie stellst du dir den Charakter dieser Person vor?"></textarea>
+  </td>
+    </table>
+  </div>
+
+  <div class="figur">
+    <h4>Liss 👩🏽</h4>
+    <table>
+      <tr>
+        <th>Alter</th>
+        <td>ca. Mitte 40</td>
+      </tr>
+      <tr>
+        <th>Herkunft</th>
+        <td>Dorfkind, lebt allein auf einem Hof</td>
+      </tr>
+      <tr>
+        <th>Charakter</th>
+        <td>ruhig, stark, schweigsam, geduldig, geheimnisvoll</td>
+      </tr>
+      <tr>
+        <th>Zitat</th>
+        <td>„Wenn du dich erfolgreich totstellst, hat das die unangenehme Folge, dass die Leute irgendwann glauben, dass du wirklich tot bist.“</td>
+      </tr>
+      <tr>
+  <th>Charakter</th>
+  <td>
+    <label for="charakter-liss"></label><br>
+    <textarea id="charakter-liss" name="charakter-liss" rows="3" cols="40" placeholder="Wie stellst du dir den Charakter dieser Person vor?"></textarea>
+  </td>
+</tr>
+
+    </table>
+  </div>
+</div>
+
+  </section>
+  
+<!-- Kapitel: Einstiegsaufgabe -->
+<section id="einstieg" class="kapitel">
+  <h2>Einstiegsaufgabe: Was sind „alte Sorten“ für dich?</h2>
+  <p>Ziehe die Begriffe in die passende Kategorie. Du entscheidest, was für dich zu „alten Sorten“ gehört!</p>
+
+  <div id="drag-container" style="display: flex; gap: 20px; margin-bottom: 2em;">
+    <div class="dropzone" ondrop="drop(event)" ondragover="allowDrop(event)" data-category="alt" style="flex: 1; border: 2px dashed #aaa; padding: 1em; border-radius: 10px;">
+      <h3>"Alte" Sorten</h3>
+    </div>
+    <div class="dropzone" ondrop="drop(event)" ondragover="allowDrop(event)" data-category="neu" style="flex: 1; border: 2px dashed #aaa; padding: 1em; border-radius: 10px;">
+      <h3>"Neue" Sorten</h3>
+    </div>
+  </div>
+
+  <div id="word-bank" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 2em;">
+    <p draggable="true" ondragstart="drag(event)" id="wort1">📖 Bücher</p>
+    <p draggable="true" ondragstart="drag(event)" id="wort5">😂 Emojis</p>
+    <p draggable="true" ondragstart="drag(event)" id="wort3">🎵 Plattenspieler</p>
+    <p draggable="true" ondragstart="drag(event)" id="wort4">🎪 Dorffest</p>
+    <p draggable="true" ondragstart="drag(event)" id="wort6">📱 Handy</p>
+    <p draggable="true" ondragstart="drag(event)" id="wort2">⌨️ Schreibmaschinen</p>
+    <p draggable="true" ondragstart="drag(event)" id="wort7">🍕 Tiefkühlpizza</p>
+  </div>
+  <div style="margin-bottom: 2em;">
+  <h4>📝 Was gehört für dich noch dazu?</h4>
+  <input type="text" id="custom-word-input" placeholder="Eigener Begriff..." style="padding: 0.5em; border-radius: 5px; border: 1px solid #ccc;">
+  <button onclick="addCustomWord()" style="padding: 0.5em 1em; margin-left: 0.5em;">➕ Hinzufügen</button>
+</div>
+
+<script>
+let customWordCount = 1;
+
+function drag(ev) {
+  ev.dataTransfer.setData("text", ev.target.id);
+}
+
+function allowDrop(ev) {
+  ev.preventDefault();
+}
+
+function drop(ev) {
+  ev.preventDefault();
+  const data = ev.dataTransfer.getData("text");
+  const draggedElement = document.getElementById(data);
+  ev.target.appendChild(draggedElement);
+}
+
+function addCustomWord() {
+  const input = document.getElementById("custom-word-input");
+  const word = input.value.trim();
+  if (word === "") return;
+
+  const newWord = document.createElement("p");
+  newWord.textContent = word;
+  newWord.setAttribute("draggable", "true");
+  newWord.setAttribute("ondragstart", "drag(event)");
+  newWord.id = "custom-word-" + customWordCount++;
+  newWord.style.margin = "5px";
+
+  document.getElementById("word-bank").appendChild(newWord);
+  input.value = "";
+}
+</script>
+
+
+
+  <h2>Memory: Symbole aus dem Buch</h2>
+  <p>Finde passende Bildpaare – im Laufe der Geschichte wirst du ihre Bedeutung entdecken.</p>
+
+  <div id="memory-board" style="display: grid; grid-template-columns: repeat(4, 100px); gap: 12px; margin-top: 1em;"></div>
+  <p id="memory-message" style="margin-top: 1em; font-weight: bold;"></p>
+
+    <!-- Textfeld daneben -->
+  <div id="symbol-gedanken" style="flex: 1;">
+    <h4>Schreibe deine Gedanken zu den Symbolen hier auf:</h4>
+    <textarea placeholder="Was bedeuten die Bilder für dich?" rows="8" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 1em;"></textarea>
+  </div>
+
+</section>
+
+<!-- Kapitel: Ankunft -->
+
+<section id="Ankunft" class="kapitel">
+
+  <h1 style="text-align: center; font-size: 1.5em; color: #888888; margin-top: 1em;">
+  Jetzt beginnt deine Reise durch das Buch.
+</h1>
+  <h2>Ankunft</h2>
+
+  <div class="zusammenfassung">
+    <p>Sally, 17, ist aus einer Klinik für Essgestörte geflohen. Auf einem Feldweg trifft sie Liss, eine ruhige Frau, die auf einem Bauernhof lebt. Ihr Traktor ist stecken geblieben.
+      Ohne Druck bittet Liss Sally um Hilfe. Sally hilft ihr. 
+      </p>
+  </div>
+
+  <div class="sticky-note">
+    <p>»Danke.«<br>
+    Sally nickte.<br>
+    »Kannst du Traktor fahren?«, fragte die Frau sie dann.<br>
+    Sally, sofort wütend über die bescheuerte Frage, drehte sich zu ihr um.<br>
+    »Seh ich so aus?«, schnappte sie. »Sehe ich so aus, als hätte ich einen Führerschein? Sehe ich aus wie verfickte achtzehn oder was?«<br>
+    Die Frau hatte aufgehört zu lächeln und sah sie wieder so an, als käme ihr Blick aus dem Meer oder über die Berge; auf jeden Fall von irgendwo wirklich weit weg.<br>
+    »Das habe ich nicht gefragt«, antwortete sie sachlich wie auf eine richtige Frage; und ruhig, ohne Vorwurf. »Aber es ist auch nicht wichtig. Kannst du mir zwei Steine holen und sie unter die Vorderräder legen? Nicht zu klein, bitte.«</p>
+  </div>
+
+  <div class="frage-box">
+    <p><strong>Warum könnte Sally so wütend auf einfache Fragen reagieren?</strong></p>
+    <textarea placeholder="Deine Gedanken hier eingeben..." rows="8" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 1em;"></textarea>
+  </div>
+
+  <div class="frage-box">
+  <h3>Was wäre deine Reaktion an Liss’ Stelle gewesen?</h3>
+  <div style="margin: 1em 0;">
+    <button onclick="zeigeAntwort1('a')" style="padding: 10px; margin: 0.5em; border-radius: 8px;">Ich hätte die Frage zurückgezogen und geschwiegen.</button>
+    <button onclick="zeigeAntwort1('b')" style="padding: 10px; margin: 0.5em; border-radius: 8px;">Ich hätte ruhig nachgefragt.</button>
+    <button onclick="zeigeAntwort1('c')" style="padding: 10px; margin: 0.5em; border-radius: 8px;">Ich hätte deutlich gemacht, dass der Ton nicht geht.</button>
+  </div>
+    <div style="margin-top: 1.5em;">
+    <label for="eigene-antwort1" style="display: block; margin-bottom: 0.5em;">Oder hast du eine ganz eigene Reaktion?</label>
+    <textarea id="eigene-antwort1" rows="3" placeholder="Schreib deine Gedanken hier auf..." style="width: 100%; padding: 0.75em; border-radius: 8px; border: 1px solid #ccc;"></textarea>
+  </div>
+  <p id="antwort1-feedback" style="font-style: italic; color: #555;"></p>
+</div>
+  <!-- Eigene Antwort -->
+
+</div>
+
+  <div class="zusammenfassung">
+    <p>Liss lädt Sally ein, auf ihrem Hof zu schlafen. Keine Fragen, keine Regeln. Sally weiß nicht, was sie davon halten soll. Doch dann wirft sie ihren Rucksack auf den Anhänger und steigt ein. Noch mit Abstand, noch voller Zweifel. Aber es ist der erste kleine Schritt.
+      </p>
+  </div>
+
+  <div class="frage-box">
+    <p><strong>Was unterscheidet Liss bis jetzt von anderen Erwachsenen?</strong></p>
+    <textarea placeholder="Deine Gedanken hier eingeben..." rows="8" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 1em;"></textarea>
+  </div>
+
+  <div class="zusammenfassung">
+    <p>Sally wacht in einem stillen Haus auf. In der Küche: Obstsalat, Tee – kein Zettel, kein Befehl. Sie will eigentlich schon wieder weiterziehen. Doch etwas hält sie zurück. 
+      </p>
+  </div>
+
+
+
+  <div class="sticky-note">
+    <p> Sie war frei. Keiner wusste, wo sie war. Sie konnte gehen, wohin sie wollte. Sie warf sich den Rucksack über und lief die Treppe hinunter. In der Küche blieb sie stehen. Wunderbar. Die Frage war jetzt allerdings, wohin sie denn eigentlich wollte.  »Weg ist keine Richtung, oder?«</p>
+  </div>
+
+  <div class="frage-box">
+    <p><strong>Was bedeutet diese letzte Aussage für Sallys Situation?</strong></p>
+    <textarea placeholder="Deine Gedanken hier eingeben..." rows="8" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 1em;"></textarea>
+  </div>
+
+  <div class="zusammenfassung">
+    <p>Regen fällt – Liss genießt ihn. Erinnerungen an ihre Kindheit werden wach: </p>
+  </div>
+
+  <div class="sticky-note">
+    <p> Sie schwankten und sprangen von einer Scholle auf die andere, schoben sich gegenseitig weg. Und dann versuchte Thomas, sie mit seinem Stecken von der Scholle zu stoßen.
+      Lass das! Mach doch auch. Wer stärker ist. Lass! Ich darf nicht nass heimkommen.
+      Thomas stieß mit dem Stecken nach ihr. Sie musste sich an der Wand abstützen und schob sich in die Mitte, schwankend zwischen Lachen und Ärger. Dein Vater hat den größten Hof im Dorf! Der kann dir neue Kleider kaufen. Sie stieß seine Scholle fort. Er schwankte, musste in die Knie gehen, um nicht zu fallen. Gar nicht wahr. Sie wusste gar nicht, ob sie den größten Hof hatten. Sie hatte nie darüber nachgedacht. Thomas war hochgekommen und trat mit Wucht auf den Rand ihrer Scholle. Sie verlor das Gleichgewicht, rutschte, und dann stand sie bis zu den Hüften im eiskalten Wasser. 
+      </p>
+  </div>
+
+
+  <div class="frage-box">
+    <p><strong>Welche Parallelen gibt es zwischen Liss' Kindheit und Sallys jetziger Lage?</strong></p>
+    <textarea placeholder="Deine Gedanken hier eingeben..." rows="8" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 1em;"></textarea>
+  </div>
+
+  <div class="zusammenfassung">
+    <p>Liss bittet Sally um Hilfe bei der Kartoffelernte. Sally explodiert – schreit, wirft, rennt.
+      Spätabends steht trotzdem ein Teller für sie bereit. Sally isst – und spürt das erste Mal seit Langem: Heimat.
+      </p>
+  </div>
+
+
+  <div class="frage-box">
+    <p><strong>Warum ist diese kleine Geste so wichtig für Sally?</strong></p>
+    <textarea placeholder="Deine Gedanken hier eingeben..." rows="8" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 1em;"></textarea>
+  </div>
+
+  
+  <div class="zusammenfassung">
+    <p>Liss steht in der Küche. Sally hat etwas gegessen – nicht viel, aber genug, um zu zeigen: Sie ist noch da. Liss bringt den Topf in die Speisekammer. Dort stehen noch alte Werkzeuge vom Schlachten: Messer, Beil, die schwere Fleischbank. Früher waren sie wichtig. Jetzt braucht sie niemand mehr.</p>
+    <p>Liss denkt: Vielleicht bin ich auch so – alt und nicht mehr nützlich. Aber das Mädchen ist jung. Sie kann noch viel machen.</p>
+    <p>Sally ist erst seit sechs Tagen hier. Für Liss ist das nicht viel. Für Sally ist es lang. Liss merkt: Seit Sally da ist, fühlen sich die Tage anders an.</p>
+  </div>
+
+  <div class="frage-box">
+    <p><strong>Wie verändert Sally Liss’ Sicht auf ihr eigenes Leben?</strong></p>
+    <textarea placeholder="Deine Gedanken hier eingeben..." rows="8" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 1em;"></textarea>
+  </div>
+
+  <div class="zusammenfassung">
+    <p>Es ist Freitag und niemand hat Sally gefunden. Sie liegt in dem schlichten Zimmer auf Liss’ Hof. Keine Pastellfarben, keine netten Poster, kein Zwang, sich wohlzufühlen. Und genau deshalb fühlt sie sich hier zum ersten Mal nicht beobachtet, nicht gedrängt. Einfach nur da.</p>
+    <p>Doch dann kommt ein Moment, der alles ändert: In der Zeitung steht, dass Sally vermisst wird. Sie liest ihren Namen. Die Suche hat begonnen. Liss schlägt ruhig vor, sie könne ja jemandem schreiben nur um zu sagen, dass sie lebt:</p>
+  </div>
+
+  <div class="sticky-note">
+    <p>»Willst du gehen oder bleiben?«, fragte sie, ohne sich nach Sally umzudrehen.<br>
+    »Die sollen mich in Ruhe lassen. Die sollen mich einfach in Ruhe lassen.«<br>
+    Jetzt drehte sich Liss um. »Dann solltest du ihnen eine Chance dazu geben«, riet sie mit dieser ruhigen Stimme, die Sally eigentlich cool fand. »Schreib ihnen, dass du in Ruhe gelassen werden willst.«</p>
+  </div>
+
+  <!-- <div class="frage-box">
+    <p><strong>Warum ist Liss’ ruhiger Umgang mit Sally in dieser Situation so wirkungsvoll?</strong></p>
+    <textarea placeholder="Deine Gedanken hier eingeben..." rows="8" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 1em;"></textarea>
+  </div> -->
+
+  <div class="zusammenfassung">
+    <p>Sally bricht in Wut aus und schreit, flucht, wehrt sich. Doch Liss bleibt ruhig. Kein Druck, kein Urteil. Nur ein einfacher Satz:</p>
+  </div>
+
+  <div class="sticky-note">
+    <p>„Wenn du dich erfolgreich tot stellst, hat das die unangenehme Folge, dass die Leute irgendwann glauben, dass du wirklich tot bist. Und das macht alle nervös. Ich mag aber keine nervösen Leute auf meinem Hof.“</p>
+  </div>
+
+  <div class="frage-box">
+    <p><strong>Was meint Liss mit diesem Satz?</strong></p>
+    <textarea placeholder="Deine Gedanken hier eingeben..." rows="8" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 1em;"></textarea>
+  </div>
+
+  <div class="frage-box">
+    <p><strong>Warum bleibt Liss trotz Sallys Ausbruch ruhig?</strong></p>
+    <textarea placeholder="Deine Gedanken hier eingeben..." rows="8" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 1em;"></textarea>
+  </div>
+
+  <div class="zusammenfassung">
+    <p>Sally bleibt. Ohne dass sie es sagt. Sie isst Obst, trinkt Tee und bleibt. Es ist kein Sieg. Aber ein Anfang. Und ein kleines, echtes Stück Vertrauen.</p>
+  </div>
+
+  <div class="frage-box">
+    <p><strong>Was bedeutet es, dass Sally bleibt, ohne es auszusprechen?</strong></p>
+    <textarea placeholder="Deine Gedanken hier eingeben..." rows="8" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 1em;"></textarea>
+  </div>
+
+<div class="mood-tracker" style="margin-top: 2em; padding: 1em; border-radius: 10px; border: 1px solid #ccc; background-color: #f9f9f9;">
+  <p><strong>Wie fühlst du dich nach diesem Kapitel?</strong></p>
+  <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+    <button onclick="markMood('😊', 'mood-feedback-ankunft')">😊 Gut</button>
+    <button onclick="markMood('😐', 'mood-feedback-ankunft')">😐 Neutral</button>
+    <button onclick="markMood('😢', 'mood-feedback-ankunft')">😢 Traurig</button>
+    <button onclick="markMood('😠', 'mood-feedback-ankunft')">😠 Wütend</button>
+    <button onclick="markMood('🤔', 'mood-feedback-ankunft')">🤔 Nachdenklich</button>
+  </div>
+  <p id="mood-feedback-ankunft" style="margin-top: 1em; font-style: italic; color: #555;"></p>
+</div>
+
+
+
+
+<script>
+  function zeigeAntwort1(wahl) {
+    let feedback = document.getElementById("antwort1-feedback");
+    if (wahl === "a") {
+      feedback.innerText = "Du ziehst dich zurück – das kann deeskalieren, aber auch Distanz schaffen.";
+    } else if (wahl === "b") {
+      feedback.innerText = "Wie Liss: ruhig bleiben trotz Wut – das schafft Vertrauen ohne Druck.";
+    } else if (wahl === "c") {
+      feedback.innerText = "Klarheit kann gut sein – aber bei verletzten Menschen manchmal zu viel.";
+    }
+  }
+
+  function zeigeAntwort2(wahl) {
+    let feedback = document.getElementById("antwort2-feedback");
+    if (wahl === "a") {
+      feedback.innerText = "Ein mutiger Schritt: kommunizieren, ohne sich auszuliefern.";
+    } else if (wahl === "b") {
+      feedback.innerText = "Manchmal braucht es Flucht – aber echte Ruhe kommt meist später.";
+    } else if (wahl === "c") {
+      feedback.innerText = "Ein guter Kompromiss – Raum für Reflexion, bevor man handelt.";
+    }
+  }
+</script>
+
+
+</section>
+
+<!-- Kapitel: Annäherung -->
+<section id="Annäherung" class="kapitel">
+  <h2>Annäherung</h2>
+
+  <div class="zusammenfassung">
+    <p>Sally sammelt Eier, als ein Auto auf den Hof fährt. Sie versteckt sich im alten Silo und beobachtet, wie ein alter Mann erscheint und mehrmals hupt. Liss kommt heraus, spricht mit ihm, dann geht er ins Haus. Kurz darauf kommt er mit einem Karton wieder heraus. Liss stellt sich ihm in den Weg und wird laut. Als der Mann trotz Protest ins Auto einsteigt, nimmt Liss eine Schaufel und zerkratzt den Wagen. Dabei ruft sie:</p>
+  </div>
+
+  <div class="sticky-note">
+    <p>„Was willst du jetzt machen? Die Polizei holen?“</p>
+  </div>
+
+
+
+  <div class="zusammenfassung">
+    <p>Der Mann fährt davon, Liss wirft die Schaufel über den Hof. Sally kommt aus dem Versteck. Auf ihre Fragen, wer das sei, antwortet Liss nur knapp. Im Karton waren Bücher. Sie sagt, sie hätte nicht gedacht, dass sie noch abgeholt werden. Danach trinken die beiden zusammen Tee im Hof.</p>
+  </div>
+
+    <div class="frage-box">
+    <p><strong>Warum denkst du reagiert Liss so heftig auf den Mann mit dem Karton?</strong></p>
+    <textarea placeholder="Deine Gedanken hier eingeben..." rows="8" style="width:100%; padding:12px; border-radius:8px; border:1px solid #ccc; font-size:1em;"></textarea>
+  </div>
+
+  <div class="sticky-note">
+    <p>Liss betrachtete sich im Spiegel des Kleiderschranks. Es war lange her, seit sie dieses Kleid getragen hatte. Über fünfzehn Jahre. Wie sehr Kleider einen veränderten. Nur Stoff und Farbe – und dann stand da ein fremder Mensch. Aber es war auch gut, dass sie anziehen konnte, was sie wollte. Sie kam sich nur fremd vor. Sie stand ganz still und sah sich selbst ins Gesicht, als begegnete sie einer alten Schulfreundin, die sie seit damals nicht mehr gesehen hatte. Was war da noch von dem verschlossenen Mädchen von damals, das manchmal so einen festen Mund machte, wenn es etwas unbedingt wollte? Im Glas glitt an der halb offenen Tür ein Schatten vorbei. Sally war aufgestanden und auf dem Weg ins Bad, hielt inne und sah zu ihr ins Zimmer. »Ganz in Schwarz?« Liss nickte und sah sie im Spiegel an. »Ich muss zu einer Beerdigung.«</p>
+  </div>
+
+  <div class="frage-box">
+    <p><strong>Was erfährst du hier über Liss’ Vergangenheit?</strong></p>
+    <textarea placeholder="Deine Gedanken hier eingeben..." rows="8" style="width:100%; padding:12px; border-radius:8px; border:1px solid #ccc; font-size:1em;"></textarea>
+  </div>
+
+  <div class="zusammenfassung">
+    <p>Sally fragt, ob sie mitkommen darf, und bekommt passende Kleidung von Liss.
+Auf dem Weg zur Kirche treffen sie viele Dorfbewohner. In der Kirche sitzen Männer und Frauen getrennt. Sally beobachtet alles genau. Sie steht auf und setzt sich, wie Liss es tut, und liest die Liedtexte mit.
+Nach dem Gottesdienst folgt ein Trauerzug durch das Dorf. Unterwegs beleidigt eine Frau Liss, wird aber von einer alten Frau, Anni, verteidigt. Am Grab wird der Sarg beerdigt. Liss verlässt den Friedhof still, ohne Beileid zu wünschen und Sally folgt ihr. 
+</p>
+  </div>
+
+  <div class="sticky-note">
+    <p>Sie gingen schweigend nebeneinanderher. Es war heiß, und es
+roch nach Staub und nach Stroh, als ein Traktor, hoch beladen mit
+Ballen, an ihnen vorbeituckerte.
+»War das immer so?«, fragte Sally schließlich, als sie in Liss’ Hof
+abbogen.
+»Immer«, sagte Liss und stieg nach oben, um sich umzuziehen.
+Sally blieb im Hof stehen und sah zur Kirche hinüber. Auf der
+Turmspitze leuchtete die goldene Kugel im makellosen Blau des
+Himmels. Wozu war die eigentlich? Und wie hatte sich Liss gerade
+angehört? Stolz? Traurig? Spöttisch? Oder einfach nur bitter?
+Sie hätte es nicht sagen können.
+</p>
+  </div>
+
+  <div class="frage-box">
+  <h3>Was denkst du?</h3>
+  <div style="margin: 1em 0;">
+    <button onclick="zeigeAntwortGefuehl('a')" style="padding: 10px; margin: 0.5em; border-radius: 8px;">Stolz?</button>
+    <button onclick="zeigeAntwortGefuehl('b')" style="padding: 10px; margin: 0.5em; border-radius: 8px;">Traurig?</button>
+    <button onclick="zeigeAntwortGefuehl('c')" style="padding: 10px; margin: 0.5em; border-radius: 8px;">Spöttisch?</button>
+    <button onclick="zeigeAntwortGefuehl('d')" style="padding: 10px; margin: 0.5em; border-radius: 8px;">Einfach nur bitter?</button>
+  </div>
+  <p id="antwort-gefuehl-feedback" style="font-style: italic; color: #555;"></p>
+</div>
+
+<script>
+  function zeigeAntwortGefuehl(wahl) {
+    let feedback = document.getElementById("antwort-gefuehl-feedback");
+    if (wahl === "a") {
+      feedback.innerText = "Vielleicht ein Moment des Stolzes – trotz allem die Haltung bewahrt.";
+    } else if (wahl === "b") {
+      feedback.innerText = "Die Traurigkeit liegt nahe – oft steckt mehr dahinter als gesagt wird.";
+    } else if (wahl === "c") {
+      feedback.innerText = "Spott kann ein Schutz sein – gegen Enttäuschung oder Schmerz.";
+    } else if (wahl === "d") {
+      feedback.innerText = "Bitterkeit – vielleicht die ehrlichste Reaktion auf alles, was war.";
+    }
+  }
+</script>
+
+
+  <div class="frage-box">
+    <p><strong>Welche Bedeutung könnte das gemeinsame Schweigen zwischen Liss und Sally auf dem Rückweg haben?</strong></p>
+    <textarea placeholder="Deine Gedanken hier eingeben..." rows="8" style="width:100%; padding:12px; border-radius:8px; border:1px solid #ccc; font-size:1em;"></textarea>
+  </div>
+
+  <div class="zusammenfassung">
+    <p>Sally will raus vom Hof und fragt Liss, ob sie das Fahrrad nehmen darf. Liss sagt nichts – Sally nimmt es einfach. Beim Fahren denkt sie über Liss nach: Warum erzählt sie nichts über sich? Wem gehört das Rad? Wer hat früher in dem Haus gelebt? Sally merkt, dass sie zum ersten Mal wieder neugierig auf einen anderen Menschen ist.
+Sie fährt bis in eine kleine Stadt, besucht ein Internetcafé und schaut, was andere über ihr Verschwinden aus der Klinik schreiben. In einer Gruppe wird über sie geredet – das verletzt sie. Sie löscht sich aus der Gruppe und verbringt den Tag allein mit Kaffee und Erdbeereis. Als sie spät in der Nacht zurückkommt, schläft sie lang und liest am nächsten Tag und das zum ersten Mal seit Jahren.
+</p>
+  </div>
+
+  <div class="frage-box">
+    <p><strong>Warum nimmt Sally das Fahrrad einfach? Was bedeutet das Fahrrad für Sally?</strong></p>
+    <textarea placeholder="Deine Gedanken hier eingeben..." rows="8" style="width:100%; padding:12px; border-radius:8px; border:1px solid #ccc; font-size:1em;"></textarea>
+  </div>
+
+  <div class="zusammenfassung">
+    <p>Am Morgen sieht sie im Bad einen Blutstropfen und später in der Küche, dass Liss einen Verband am Arm trägt. Sally erkennt sofort: Liss hat sich selbst verletzt. Wütend und fassungslos schreit sie sie an. Liss bleibt ruhig und sagt:</p>
+  </div>
+
+  <div class="sticky-note">
+    <p>»Ich wollte wissen, wie es ist«, sagte sie ruhig. »Ich konnte mir das
+nicht vorstellen … ich wollte wissen, wie es sich anfühlt.«
+»Und?«, schrie Sally, aber es war gar nicht die Wut, die sie kannte,
+es war eine andere Wut. Wie … wütendes Mitleid. Sie hasste es. Sie
+wollte wütend sein. Nur wütend. »Und? Fühlt sich geil an, ein
+Psycho zu sein, oder? Willkommen im Club! Willkommen im
+Ritzerclub.«
+Liss stand auf und holte den Honig aus dem Küchenschrank, bevor
+sie antwortete.
+»Es tut weh.«
+»Klar tut es weh!«, rief Sally. Sie wollte schreien, aber sie war
+nicht mehr wütend genug. Sie war jetzt nur noch laut. »Klar tut es
+weh. Was hast du gedacht?«
+»Nichts. Deshalb hab ich es ausprobiert. Willst du Honig?«
+»Nein!«
+Sally trank einen Schluck.
+»Doch.«
+Liss reichte ihr das Glas. Sally schraubte es auf und tunkte ihr
+Messer hinein, drehte es im Herausnehmen, damit der Honig nicht
+tropfte, und rührte ihn dann mit dem Messer in den Tee.
+</p>
+  </div>
+
+  <div class="frage-box">
+    <p><strong>Warum hat Liss sich selbst verletzt? Was wollte sie damit herausfinden?</strong></p>
+    <textarea placeholder="Deine Gedanken hier eingeben..." rows="8" style="width:100%; padding:12px; border-radius:8px; border:1px solid #ccc; font-size:1em;"></textarea>
+  </div>
+
+  <div class="frage-box">
+    <p><strong>Wie verläuft der Streit zwischen Sally und Liss? Was ist daran ungewöhnlich?</strong></p>
+    <textarea placeholder="Deine Gedanken hier eingeben..." rows="8" style="width:100%; padding:12px; border-radius:8px; border:1px solid #ccc; font-size:1em;"></textarea>
+  </div>
+
+  <div class="sticky-note">
+    <p>Sally starrte herausfordernd zurück. Sie legte das Messer auf den
+Teller. Plötzlich musste sie grinsen:
+»Das musst du nicht auch noch nachmachen.«
+Liss lachte wie befreit.
+»Willst du sehen, wo er herkommt?«
+»Wer?«
+Liss deutete auf den Honig.
+»Du machst den selbst?«, fragte Sally überrascht, bevor sie schief
+lächelte und schnell fortfuhr: »Das war dumm, okay. Aber hast du
+wirklich Bienen?«
+Liss stand auf.
+»Im Garten.«
+</p>
+  </div>
+
+  <!-- <div class="frage-box">
+    <p><strong>Wie verändert sich die Stimmung zwischen den beiden nach dem Streit?</strong></p>
+    <textarea placeholder="Deine Gedanken hier eingeben..." rows="8" style="width:100%; padding:12px; border-radius:8px; border:1px solid #ccc; font-size:1em;"></textarea>
+  </div> -->
+
+  <div class="zusammenfassung">
+    <p>Zusammen führen sie eine Untersuchung an den Bienen durch, um Milben zu zählen und Sally hilft mit.</p>
+  </div>
+
+  <div class="sticky-note">
+    <p>»Halt«, sagte Sally, als der Becher voll war, hatte den anderen
+schon zur Hand, als sie einen scharfen Schmerz am Unterarm spürte.
+Eine Biene hatte sie gestochen. Sie widerstand der Versuchung, sie
+wegzuwischen, schüttete den Messbecher in den großen Becher um,
+ließ den kleinen fallen und setzte den Siebdeckel auf. Liss ließ die
+restlichen Bienen aus der Plane fast nachlässig zurück in die Kiste
+fallen. Sally rieb sich den Arm. Es war … es tat weh, aber es war ein
+eigenartig gutes Gefühl. Liss nahm ihr den Becher aus der Hand.
+»Jetzt den Zucker! Schnell. Wenn die Bienen zu lange im Becher
+sind, wird es feucht.«
+Sally reichte ihr den Zucker. Liss stäubte ein wenig – vielleicht
+einen Löffel voll – auf das Sieb und schüttelte.
+</p>
+  </div>
+
+  <div class="frage-box">
+    <p><strong>Warum ist es wichtig, dass Sally gestochen wird und trotzdem weitermacht?</strong></p>
+    <textarea placeholder="Deine Gedanken hier eingeben..." rows="8" style="width:100%; padding:12px; border-radius:8px; border:1px solid #ccc; font-size:1em;"></textarea>
+  </div>
+
+  <div class="zusammenfassung">
+    <p>Später erinnert Sally sich an eine Szene mit Ben vor einem Einkaufszentrum. Sie hatte versucht, ihm zu erklären, wie fremd sie sich zu Hause fühlt – als wäre sie dort nur ein Gast. Sie beschreibt das Gefühl, als würde irgendwo das echte Leben auf sie warten – hinter einer Tür, die sich immer gerade wieder schließt:</p>
+  </div>
+
+  <div class="sticky-note">
+    <p>Sie hatte nie Heimweh gehabt, wenn sie im Schullandheim oder auf Freizeit oder im Sommercamp war. Es war wahrscheinlich Heimweh nach dem Ort, wo man eigentlich sein sollte. Nach einem Zuhause, das man noch gar nicht kannte, aber das auf einen wartete.</p>
+  </div>
+
+  <div class="frage-box">
+    <p><strong>Was meint Sally, wenn sie von einem Zuhause, das auf einen wartet spricht?</strong></p>
+    <textarea placeholder="Deine Gedanken hier eingeben..." rows="8" style="width:100%; padding:12px; border-radius:8px; border:1px solid #ccc; font-size:1em;"></textarea>
+  </div>
+
+
+<div class="mood-tracker" style="margin-top: 2em; padding: 1em; border-radius: 10px; border: 1px solid #ccc; background-color: #f9f9f9;">
+  <p><strong>Wie fühlst du dich nach diesem Kapitel?</strong></p>
+  <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+    <button onclick="markMood('😊', 'mood-feedback-annaeherung')">😊 Gut</button>
+    <button onclick="markMood('😐', 'mood-feedback-annaeherung')">😐 Neutral</button>
+    <button onclick="markMood('😢', 'mood-feedback-annaeherung')">😢 Traurig</button>
+    <button onclick="markMood('😠', 'mood-feedback-annaeherung')">😠 Wütend</button>
+    <button onclick="markMood('🤔', 'mood-feedback-annaeherung')">🤔 Nachdenklich</button>
+  </div>
+  <p id="mood-feedback-annaeherung" style="margin-top: 1em; font-style: italic; color: #555;"></p>
+</div>
+
+
+
+</section>
+
+
+<!-- Kapitel: Vertrauen -->
+<section id="Vertrauen" class="kapitel">
+  <h2>Vertrauen</h2>
+
+  <div class="zusammenfassung">
+    <p>Sally und Liss kommen sich auf eine neue Weise näher. Sie sprechen erstmals über Sallys Zukunft.</p>
+  </div>
+
+  <div class="sticky-note">
+    <p>»Wenn ich das Scheißabitur habe«, sagte Sally, »fahren wir in den
+Süden.«
+Liss antwortete nicht, bis sie auf den Hof fuhren.
+»Ich werde dich abholen«, sagte sie, während sie die Räder vom
+Hänger hoben.
+»Du hast kein Auto.«
+Liss deutete auf den Hänger.
+»Man sieht es noch nicht, aber das ist ein zukünftiger
+Wohnwagen. An dem Tag, an dem du dein Abitur hast, stehe ich vor
+deiner Schule.«
+»Mit dem Traktor?«
+Sally musste bei der Vorstellung lachen. Liss lächelte und hob die
+Schultern.
+»Du sagst es ja. Ich habe kein Auto.«
+</p>
+  </div>
+
+  <div class="frage-box">
+    <p><strong>Wie glaubwürdig ist Liss’ Versprechen, Sally nach dem Abitur mit dem Traktor abzuholen?</strong></p>
+    <textarea placeholder="Deine Gedanken hier eingeben..." rows="8"></textarea>
+  </div>
+
+  <div class="zusammenfassung">
+    <p>Liss backt Brot. Die Routine beruhigt sie, aber alte Erinnerungen steigen hoch. Die Werkzeuge in der Speisekammer – Messer, Beil – erinnern an frühere Schlachttage. Ein Rückblick auf ihre Kindheit und das harte Arbeiten. Sie denkt an sich selbst als junges Mädchen – zwölf Jahre alt – als sie mit dem Schlachten begann.</p>
+  </div>
+
+  <div class="sticky-note">
+    <p>Schwach in den
+Beinen, als ob sie gerannt wäre. Die Wut in ihr floss ab wie Wasser
+aus einem Fischteich, dessen Schleusen man geöffnet hatte. Als sie
+am Fuß der Treppe angelangt war, fühlte sie sich leer und schmutzig.
+Sie war lange nicht mehr so wütend gewesen, dachte sie bedrückt,
+als sie wieder auf den Hof ging, um die Sachen aus dem Fahrradkorb
+zu holen.
+Sie war aber auch sehr lange allein gewesen, dachte sie weiter, als
+sie mit dem Refraktometer in den Keller hinunterstieg.
+Vielleicht war es doch besser, wenn das Mädchen bald wieder
+ginge.
+Vielleicht war es besser, allein zu sein.
+</p>
+  </div>
+
+  <div class="frage-box">
+    <p><strong>Kennst du Situationen, in denen Nähe zu anderen Menschen gleichzeitig schön und belastend sein kann? Warum?</strong></p>
+    <textarea placeholder="Deine Gedanken hier eingeben..." rows="8"></textarea>
+  </div>
+
+  <div class="zusammenfassung">
+    <p>Ein Gespräch mit der alten Anni, eine ältere Frau aus dem Dorf, die Liss seit ihrer Kindheit kennt. Liss denkt über das Altern nach, über den Walnussbaum, der ebenso alt ist wie sie und noch reichlich trägt.</p>
+  </div>
+
+  <div class="sticky-note">
+    <p>Die Anni stand
+für alles, was Liss an ihrem Dorf immer noch liebte. Es war, als sei
+sie aus der Zeit gefallen. Ihr Fahrrad hatte keine Gänge und war so
+schwarz wie ihre Kleidung, seit sie verwitwet war. Wie lange war das
+her? Liss rechnete zurück. Sie war neunzehn gewesen. So lange
+schon trug die Anni schwarz.
+»Ein gutes Jahr«, antwortete sie und hob eine Nuss auf.
+War die Anni früher auch schon so klein gewesen? Sie schien
+kaum über den Zaun sehen zu können.»Was ist es denn? Beerdigung oder Taufe?«
+Eine Hochzeit konnte es nicht sein. Hochzeiten waren immer
+samstags.
+»Der Gutmann ist gestorben. Hast es nicht gehört?«
+Liss rieb die Nuss zwischen den Fingern.
+»Von wem denn?«, fragte sie kurz.
+Die Anni nickte. Liss versuchte, in ihrem Gesicht die Frau zu
+finden, die ihr die Brezen geschenkt hatte, vor fast vierzig Jahren.
+Die Frau, die damals so alt gewesen war wie sie heute.
+</p>
+  </div>
+
+  <div class="frage-box">
+    <p><strong>Welche Rolle spielt Anni für Liss?</strong></p>
+    <textarea placeholder="Deine Gedanken hier eingeben..." rows="8"></textarea>
+  </div>
+
+  <div class="zusammenfassung">
+    <p>Liss nimmt Sally mit in den Wald um ein Reh zu zerlegen. Liss weiß, was zu tun ist. Sally, wird neugierig. Sie hilft, hält Organe, lernt das Innere eines Körpers kennen.</p>
+  </div>
+
+  <div class="sticky-note">
+    <p>»Woher kannst du das alles?«, fragte sie Liss, um irgendwas zu
+sagen. Sie hatte noch nie zugesehen, wie ein Tier geschlachtet wurde.
+Sie hatte noch nie gesehen, wie leicht das alles war und wie winzig
+der Augenblick war, der zwischen Leben und Tod lag. Zehn Minuten,
+und aus dem springenden Reh war Fleisch geworden, das am Baum
+hing und nichts mehr fühlte.
+Liss wischte ihre Hände und das Messer im Moos ab, klappte es zu
+und steckte es ein.
+»Wir verstecken es unter dem Holz. Eigentlich hätten wir den
+Jäger rufen müssen. Du und ich«, sie lächelte Sally auf einmal an,
+»wir haben gerade gewildert.«
+Und du hast eine Pistole unter dem Sitz deines Traktors, dachte
+Sally, als sie Liss half, das Reh auf den Hänger zu werfen und dann
+ein paar Scheite darüberzuschlichten. Du hast einfach eine Pistole
+auf dem Traktor.
+</p>
+  </div>
+
+  <div class="frage-box">
+    <p><strong>Was lernt Sally durch das Zerlegen des Rehs über Leben, Tod und über Liss?</strong></p>
+    <textarea placeholder="Deine Gedanken hier eingeben..." rows="8"></textarea>
+  </div>
+
+  <div class="zusammenfassung">
+    <p>Sally hinterlässt erstmals eine Nachricht. Liss empfindet gemischte Gefühle:</p>
+  </div>
+
+  <div class="sticky-note">
+    <p>Bin unterwegs.
+Liss stellte einen Fuß auf den Stuhl und stützte ihren Ellbogen auf
+die Knie, ihr Kinn in die Hand, während sie den Zettel wieder auf
+den Küchentisch legte. Es war das erste Mal, dass ihr das Mädchen
+eine Nachricht geschrieben hatte. Bisher war sie da gewesen oder
+fort, oben oder in der Scheune, ohne dass sie etwas gesagt hätte.
+Liss versuchte nachzudenken, aber über Gefühle nachdenken ging
+nicht, Gefühle hatte man. Manchmal mehr als eines zur gleichen
+Zeit. So wie jetzt. Der Zettel sagte: Ich will, dass du etwas über mich
+weißt. Es ist mir nicht egal, was du denkst.
+Liss wusste nicht, ob sie das wollte. Das abgerissene Eck aus der
+Zeitung, das Bleistiftgekritzel, das so gar keine Mädchenschrift war,
+sagte auch: Ich bin ein Faden, den das Mädchen zwischen euch
+geknüpft hat, ohne zu fragen. Spinnwebfein, aber du spürst ihn,
+wenn daran gezogen wird. Aus einem Faden werden Fäden und aus
+Fäden Schnüre und aus Schnüren ein Netz.
+Liss richtete sich auf, nahm den Zettel und warf ihn in den kalten
+Küchenherd.
+Fast drei Wochen ist sie jetzt hier, dachte sie und hatte wieder zwei
+gegensätzliche Gefühle, die sie schwer einordnen konnte, weil ihr die
+rechten Worte dafür fehlten, und das war wahrscheinlich schon
+immer so gewesen.
+</p>
+  </div>
+
+  <div class="frage-box">
+    <p><strong>Was löst der Zettel bei Liss aus? </strong></p>
+    <textarea placeholder="Deine Gedanken hier eingeben..." rows="8"></textarea>
+  </div>
+
+  <!-- <div class="zusammenfassung">
+    <p>In einer Rückblende verlässt Liss an einem kalten Januarmorgen ihr Elternhaus. Mit einem Rucksack trifft sie Sonny, ihren damaligen Freund, und beginnt entschlossen ein neues Leben. Dieser Aufbruch zeigt ihren Wunsch nach Freiheit und Selbstbestimmung. Gleichzeitig erleben wir Sallys innere Entwicklung: Auf einer anstrengenden Fahrradtour im Regen spürt sie zum ersten Mal seit Langem wieder sich selbst – körperlich und emotional. Die Natur, die Anstrengung und das Alleinsein geben ihr Kraft. Später besucht sie mit Liss ein Beinhaus (Karner). Die Konfrontation mit dem Tod löst in Sally eine starke Reaktion aus: Sie widerspricht Liss’ Behauptung, dass nichts Bedeutung habe, und berührt sie – zum ersten Mal. Es entsteht ein Moment echter Nähe und Vertrauen. In einer weiteren Erinnerung denkt Liss an einen Sommer mit Sonny auf einer Burgruine zurück. Ein vermeintlich romantischer Moment wird durch Eifersucht und Zweifel zerstört – ein früher Schmerz, der bis heute nachwirkt.</p>
+  </div>
+
+  <div class="frage-box">
+    <p><strong>Was verbindet Sallys und Liss' Erlebnisse in diesem Abschnitt? Wie erleben Sally und Liss Freiheit jeweils anders?</strong></p>
+    <textarea placeholder="Deine Gedanken hier eingeben..." rows="8"></textarea>
+  </div> -->
+
+
+
+  <div class="zusammenfassung">
+    <p>Sally schreibt endlich den Brief an ihre Eltern. Sie war mit dem Fahrrad in das Städtchen gefahren, hatte eine Briefmarke gekauft und ihn dann noch ein paar Dörfer weiter eingeworfen. Der Brief war einfach, neutral, uneindeutig. Und doch: das Wort „Freundin“ darin fühlt sich eigenartig an. Es ist das erste Mal, dass sie für sich etwas als Nähe benennt, auch wenn es nur flüchtig ist.</p>
+  </div>
+
+  <div class="sticky-note">
+    <p> Vielleicht kam das komische Gefühl daher, dass sie das erste
+Mal seit ihrer Kindheit für längere Zeit an einem Ort war, von dem
+sie nicht sofort wieder wegwollte. Sie hob eine Birne aus dem hohen
+Gras auf und sah sie an. Birnen würde sie nie wieder so ansehen wie
+früher. Sie war rot und gelb gestreift, und Sally versuchte, sich an
+den Namen zu erinnern, aber eigentlich war das nicht wichtig. Sie
+hatte eine Delle, da, wo sie aufgetroffen war, aber sonst sah sie
+perfekt aus. Sie biss langsam in sie hinein, ließ den Saft einfach übers
+Kinn laufen und erkannte den Geschmack sofort. Es war dieselbe
+Birnensorte, die sie am ersten Morgen aus der Schüssel mit den
+Früchten gefischt hatte. Sie musste auf einmal grinsen. Okay, dachte
+sie, Liss ist eine Hexe mit Birnen statt mit Lebkuchen.
+Liss. Was war mit der? Sie biss noch einmal ab, dann warf sie die
+Birne weg, auch wenn sie Lust gehabt hätte, sie ganz zu essen. Oder
+vielleicht deshalb. Egal. Was war mit Liss?
+»Ey du, was machst du da in dem Garten?«
+Sally fuhr erschrocken herum und ärgerte sich sofort über sich
+selbst. Sie hatte keinen Grund zu erschrecken. Sie durfte hier sein.
+Der Ruf war von der Schulseite gekommen. Da stand ein mittelalter
+Mann in einer grünen Strickjoppe, die irgendwie nach Jäger aussah.
+Das Haar war dünn und das Gesicht lang. Sally konnte ihn nicht
+leiden.
+»Ich darf hier sein«, sagte sie rasch und aggressiv, »das ist Liss’
+Garten.«
+</p>
+  </div>
+
+  <div class="frage-box">
+    <p><strong>Warum fühlt sich das Wort „Freundin“ für Sally so besonders an?</strong></p>
+    <textarea placeholder="Deine Gedanken hier eingeben..." rows="8"></textarea>
+  </div>
+    <div class="frage-box">
+    <p><strong>Warum erkennt Sally den Geschmack der Birne sofort wieder?</strong></p>
+    <textarea placeholder="Deine Gedanken hier eingeben..." rows="8"></textarea>
+  </div>
+
+  <div class="sticky-note">
+  <p> »Liss? Liss?« Der Mann sagte ihren Namen auf verächtliche
+  Weise. »Ach so. Wieso sagst du Liss? Wer bist du überhaupt?«
+  »Was geht Sie das denn an?«, fragte Sally zurück. »Wer sind denn
+  Sie?«
+  Der Mann starrte sie eine Zeit lang einfach nur an. Sally hielt den
+  Blick aus. Ihr Ärger half ihr dabei.»Ich habe dich gefragt«, sagte er dann langsam und so betont, als
+  wäre sie behindert, »wer du bist und was du in dem Garten tust.«
+  »Ja«, sagte Sally, »das stimmt. Also ficken Sie sich einfach.«
+  Sie ging innerlich zitternd aus dem Garten, ohne zu rennen. Sie
+  hörte, wie der Mann ihr nachrief:
+  »Geht’s noch? Geht’s noch, du kleine … du …«
+  Sally drehte sich um, bevor sie um das Gerätehaus herum war.
+  »Sagen Sie’s doch!«, schrie sie auffordernd zurück. »Sagen Sie’s
+  doch einfach! Vielleicht geht’s Ihnen dann besser. Schlampe? Nutte?
+  Mädchen war’s ja wohl nicht, oder?«
+  <p>
+  </div>
+
+  <div class="zusammenfassung">
+    <p>Sally kommt wütend vom Birnengarten zurück, nachdem der Nachbar sie angepöbelt hat. In ihrer Wut wirft sie einen Stein nach einem Huhn. Liss beobachtet das ruhig vom Fenster aus und reagiert mit einem scherzhaften Kommentar. Sally will wütend bleiben, muss aber lachen.</p>
+  </div>
+
+  <div class="frage-box">
+    <p><strong>Wie hättest du an Sallys Stelle auf die Situation mit dem Nachbarn reagiert?</strong></p>
+    <textarea placeholder="Deine Gedanken hier eingeben..." rows="8"></textarea>
+  </div>
+
+  <div class="zusammenfassung">
+    <p>Nach der Arbeit im Weinberg und auf einer abgelegenen Apfelwiese entspannt Sally in der Badewanne mit dem Radio. Beim Traktorfahren fragt sie Liss, ob sie reich sei. Liss erklärt, dass das Land ihrem Vater gehört – sie besitzt viel, aber hat wenig Macht. Reich zu sein bedeute für sie oft trotzdem, Rechnungen nicht zahlen zu können.</p>
+  </div>
+
+  <div class="sticky-note">
+    <p>Land ist immer auch Last, hatte sie kurz gesagt.
+Sally streckte sich in der Wanne. Sie hatte seit Ewigkeiten nicht
+gebadet. Immer nur geduscht. Aber das ungewohnte Ziehen im
+Rücken war heute im Lauf des Tages immer stärker geworden, je
+mehr Äpfel sie aufgelesen hatte. Sie stützte sich mit den Armen am
+Wannenboden ab und hob sich langsam in die Brücke. Ihr Kopf
+tauchte bis zu den Ohren ins Wasser, ihr Körper hob sich heraus,
+glänzte nass im schwachen Licht der Badlampe, und Sally holte fast
+erschreckt Luft, weil sie sich … sie ließ sich so schnell ins Wasser
+zurückfallen, dass es an den Rändern überschwappte. Für einen
+Augenblick hatte sie sich schön gefunden. Sie schloss die Augen, um
+das Bild für einen Moment zu behalten. Das Radio spielte einen
+Song, den sie nicht kannte. Bedeutungslos.
+</p>
+  </div>
+
+  <div class="frage-box">
+    <p><strong>Ab wann ist ein Mensch wirklich reich und wer entscheidet eigentlich, was Reichtum bedeutet?</strong></p>
+    <textarea placeholder="Deine Gedanken hier eingeben..." rows="8"></textarea>
+  </div>
+
+  <div class="zusammenfassung">
+    <p>Sally fühlt sich im Bad plötzlich beobachtet und bloßgestellt, als sie Liss in der Tür stehen sieht. Der Moment trifft sie völlig unvorbereitet. Wut, Scham und tiefe Verletzung brechen aus ihr heraus. Sie schreit, beschimpft, zerstört das Bad, als wollte sie sich selbst und alles, was sie empfindet, von sich stoßen. In ihrer Verzweiflung will sie nur noch weg, raus aus dem Haus, weg von dieser Frau, die ihr plötzlich fremd und gefährlich erscheint.
+Im Hof stellt sich Liss der Situation. Sie bleibt ruhig und spricht ehrlich. Kein Ausweichen, keine Abwehr. Sie erklärt, dass ihr Blick kein Ausdruck von Begierde war, sondern Erinnerung. Sally habe sie an ihr jüngeres Ich erinnert, an Zorn, Sehnsucht und das Gefühl, anders zu sein. Aus der aufgeladenen Konfrontation wird für einen Moment etwas Echtes. 
+Am Ende bleibt die Küchentür offen. Kein Wort, keine Erklärung, nur dieses stille Zeichen. Trotz allem ist Sally noch immer willkommen.</p>
+  </div>
+
+  <div class="frage-box">
+    <p><strong>Kennst du Situationen, in denen Missverständnisse zu heftigen Konflikten geführt haben? Was hilft in solchen Momenten?</strong></p>
+    <textarea placeholder="Deine Gedanken hier eingeben..." rows="8"></textarea>
+  </div>
+
+  <div class="mood-tracker" style="margin-top: 2em; padding: 1em; border-radius: 10px; border: 1px solid #ccc; background-color: #f9f9f9;">
+  <p><strong>Wie fühlst du dich nach diesem Kapitel?</strong></p>
+  <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+    <button onclick="markMood('😊', 'mood-feedback-vertrauen')">😊 Gut</button>
+    <button onclick="markMood('😐', 'mood-feedback-vertrauen')">😐 Neutral</button>
+    <button onclick="markMood('😢', 'mood-feedback-vertrauen')">😢 Traurig</button>
+    <button onclick="markMood('😠', 'mood-feedback-vertrauen')">😠 Wütend</button>
+    <button onclick="markMood('🤔', 'mood-feedback-vertrauen')">🤔 Nachdenklich</button>
+  </div>
+  <p id="mood-feedback-vertrauen" style="margin-top: 1em; font-style: italic; color: #555;"></p>
+</div>
+
+</section>
+
+
+<!-- Kapitel: Rückkehr -->
+<section id="Rückkehr" class="kapitel">
+  <h2>Rückkehr</h2>
+
+  <div class="zusammenfassung">
+    <p>Nach Tagen des Schweigens zwischen Sally und Liss ist die Stimmung auf dem Hof angespannt. Beide meiden einander, doch keine geht. Als Sally mit dem Fahrrad durchs Dorf streift, wird ihr klar: Sie will gar nicht weg. Ein kurzer Moment mit der alten Anni, die ihr eine Breze schenkt und sagt, sie solle auf Liss aufpassen, bringt sie zum Lächeln – und zum Nachdenken.
+
+Zurück bei Liss begegnen sie sich vorsichtig neu. Gemeinsam erkunden sie eine alte Lokomobile, teilen einen unerwartet leichten Moment. Doch als plötzlich Polizei und Sallys Eltern auftauchen, flieht Sally panisch in die Kirche und bis in den Glockenturm. Dort, zwischen Angst, Aufruhr und dem ohrenbetäubenden Schall der Glocken, erkennt sie:</p>
+  </div>
+
+  <div class="sticky-note">
+    <p>Der Hof war der beste
+Platz, an dem sie je gewesen war.
+Drüben im Haus gingen die Lichter an. Überall. Anscheinend
+suchten sie dort nach ihr. Sie fragte sich, woher ihre Eltern wussten,
+dass sie hier war. Manchmal sah man an einem der Fenster einen
+Schatten vorbeigehen. Sie konnte von hier oben die Küche gerade
+noch sehen, aber Liss war nirgends zu erkennen.
+Auf einmal schnarrte es mechanisch, dann ratterte es, und sie sah
+hoch. Über ihr wurde ein Hammer zurückgezogen, der an einem
+Metallgestell neben der oberen Glocke angebracht war. Dann klickte
+es, und der Hammer schnellte vor auf die Bronze. Es war unglaublichlaut. Der Klang ging ihr durch den ganzen Körper, stärker als jemals
+auf einem Konzert. Woah! Das war abgefahren. Wieder bewegte sich
+der Hammer nach hinten und knallte ein zweites Mal auf die Glocke.
+Wieder dröhnte es durch den ganzen Glockenstuhl, durch ihren
+Bauch und ihre Knochen. Halb acht. Sie atmete zitternd ein. Dann
+wurde sie auf einmal ruhiger. 
+</p>
+  </div>
+
+  <div class="frage-box">
+    <p><strong>Was geht in Sally vor, als sie im Glockenturm steht? Warum wird sie plötzlich ruhig?</strong></p>
+    <textarea rows="8" placeholder="Deine Gedanken hier eingeben..."></textarea>
+  </div>
+
+  <div class="zusammenfassung">
+    <p>Zurück im Haus entdeckt sie, dass ihr Rucksack verschwunden ist und durchsucht schließlich Liss’ Zimmer. Dabei findet sie persönliche Briefe von Liss an einen gewissen Peter. In einem unvollendeten Brief bekennt Liss:</p>
+  </div>
+
+  <div class="sticky-note">
+    <p>Ich habe ein schlechtes Gewissen, Peter. Ich vermisse Dich so
+sehr. Es ist in all den Jahren kein Tag vergangen, kein einziger
+Tag, an dem ich nicht mit dem Gedanken an Dich aufgewacht bin.
+Dabei weiß ich nicht einmal mehr, wie Du jetzt aussiehst. Ich weiß
+nicht, wie Du denkst und lachst oder weinst – wenn Du jemals
+weinst. Wenn ich ganz ehrlich bin – und das muss ich sein, weil
+man dort schneiden muss, wo die entzündete Wunde ist, weil man
+dort tief schneiden muss, bis ins gesunde Fleisch –, dann weiß ich
+nicht einmal mehr, ob ich Dich noch erkennen würde. Das ist ein
+Gedanke, der mir Angst macht.
+Aber trotzdem habe ich ein schlechtes Gewissen. Das erste Mal
+in all den Jahren bin ich aufgewacht und habe nicht an Dich gedacht, sondern an das Mädchen. Sie erinnert mich an mich
+selbst, als ich so alt war. Nur ist sie viel stärker als ich. Und sie
+erlebt alles viel tiefer. Wir waren bei den Bienen. Sie ist gestochen
+worden, und sie war fast glücklich über den Schmerz. Ich habe
+noch nie jemanden gesehen, der alles so einsaugt wie sie. Jedes
+Bild. Jeden Geschmack. Jedes Geräusch. Kein Wunder, dass so
+eine nicht in eine normale Welt passt.
+Ich habe ein schlechtes Gewissen, weil ich sie zu mögen beginne
+und weil ich weiß, dass es sinnlos ist. Ich habe immer alles
+verloren, was ich liebte. Nein, anders: Ich habe immer alles
+zerstört, was ich liebte.
+Peter. Du fehlst mir. Ich weiß, ich schreibe das immer wieder,
+aber es kann Dich nicht langweilen, Du wirst es ja nie lesen. Aber
+Du fehlst mir eben jeden einzelnen Tag. Bis jetzt. Jetzt ist da
+jemand, mit dem ich keine Geschichte habe. Ich hätte sie längst
+fortschicken sollen. Aber ich hätte immer das Richtige tun sollen
+und habe es nie getan. Und ich würde so gerne erleben, einmal
+nur, dass ich jemanden reicher gehen lassen kann, als er zu mir
+gekommen ist. Reicher und gesünder. Dass ich einmal nicht
+kaputt schlage, was
+</p>
+</p>
+Der Brief hörte mitten im Satz auf.
+  </div>
+
+  <div class="frage-box">
+    <p><strong>Was erfährt Sally durch den Brief über Liss’ inneres Erleben und ihre Beziehung zu Peter?</strong></p>
+    <textarea rows="8" placeholder="Deine Gedanken hier eingeben..."></textarea>
+  </div>
+
+  <div class="frage-box">
+  <h3>Wie würdest du Liss’ Entwicklung in dem Brief beschreiben? Zeigt sich in ihrem Schreiben eher Reue, Hoffnung oder Resignation?</h3>
+  <div style="margin: 1em 0;">
+    <button onclick="zeigeAntwortSchreiben('a')" style="padding: 10px; margin: 0.5em; border-radius: 8px;">Reue</button>
+    <button onclick="zeigeAntwortSchreiben('b')" style="padding: 10px; margin: 0.5em; border-radius: 8px;">Hoffnung</button>
+    <button onclick="zeigeAntwortSchreiben('c')" style="padding: 10px; margin: 0.5em; border-radius: 8px;">Resignation</button>
+  </div>
+  <p id="antwort-schreiben-feedback" style="font-style: italic; color: #555;"></p>
+</div>
+
+<script>
+  function zeigeAntwortSchreiben(wahl) {
+    let feedback = document.getElementById("antwort-schreiben-feedback");
+    if (wahl === "a") {
+      feedback.innerText = "Reue – zwischen den Zeilen schimmert ein Gefühl von Schuld durch.";
+    } else if (wahl === "b") {
+      feedback.innerText = "Hoffnung – trotz allem wirkt es, als ob da noch ein Wunsch nach Veränderung lebt.";
+    } else if (wahl === "c") {
+      feedback.innerText = "Resignation – wenn man innerlich loslässt, weil man keine Kraft oder Hoffnung mehr hat.";
+    }
+  }
+</script>
+
+
+  <div class="zusammenfassung">
+    <p>Dieser Brief erschüttert Sally, da sie erkennt, wie viel sie Liss bedeutet und wie sehr diese mit ihren eigenen Schatten kämpft. Gleichzeitig liest Sally eine alarmierende E-Mail ihrer Mutter:</p>
+  </div>
+
+  <div class="sticky-note">
+    <p>Sarah, bitte melde dich unbedingt! Wir haben solche Angst um
+dich! Wir wissen, dass du auf dem Hof warst. Du darfst da auf
+keinen Fall mehr hin! Die Frau ist eine Kriminelle. Sie war im
+Gefängnis, weil sie ihren Mann umbringen wollte. Bitte melde
+dich, wenn du gesund bist. Bitte! Mama.
+</p>
+  </div>
+
+  <div class="frage-box">
+    <p><strong>Wie hättest du reagiert, wenn du zum ersten Mal erfährst, dass Liss angeblich eine „Kriminelle“ ist?</strong></p>
+    <textarea rows="8" placeholder="Deine Gedanken hier eingeben..."></textarea>
+  </div>
+    <div class="frage-box">
+    <p><strong>Was bedeutet Vertrauen, wenn sich das Bild eines Menschen plötzlich verändert?</strong></p>
+    <textarea rows="8" placeholder="Deine Gedanken hier eingeben..."></textarea>
+  </div>
+  
+  <div class="zusammenfassung">
+    <p>Sally las die Nachricht noch einmal. Und dann noch einmal. Sie schloss das Programm, schaltete den Bildschirm aus und ging aus  dem Haus. Liss wird von der Polizei und Sallys Eltern verhört. Obwohl sie nichts Unrechtmäßiges getan hat, wird sie beschuldigt, Sally beeinflusst oder versteckt zu haben. Die Situation eskaliert, als Sallys Eltern Liss emotional angreifen. Liss verteidigt sich heftig, betont, dass sie Sally nur ein Zuhause gegeben habe, und verlässt wütend und verletzt das Revier. Draußen bricht sie zusammen und reagiert mit verzweifelter Wut auf die erlebte Ungerechtigkeit.</p>
+  </div>
+
+  <div class="frage-box">
+    <p><strong>Warum ist die Situation für Liss so verletzend?</strong></p>
+    <textarea rows="8" placeholder="Deine Gedanken hier eingeben..."></textarea>
+  </div>
+
+  <div class="zusammenfassung">
+    <p>Sally ist zurück in ihrem alten Leben, doch sie fühlt sich irgendwie leer. Die vertraute Umgebung wirkt plötzlich bedeutungslos, und der Versuch, durch Ordnung und Struktur Kontrolle zu gewinnen, scheitert. Sie vermisst Liss, den Hof, die Geräusche, Gerüche und die sinnvolle Arbeit dort all das, was ihr ein Gefühl von Echtheit gegeben hat. Schule, Familie und Alltag erscheinen ihr sinnlos, und sie spürt, dass sie nirgendwo wirklich dazugehört.</p>
+  </div>
+
+  <div class="sticky-note">
+    <p>Am meisten fehlten ihr die Gerüche. Im Weinkeller die
+Birnenmaische. Draußen, auf dem Hof, der Geruch der Kühe, der
+manchmal gegen Abend von den Ställen im Dorf herübergetragen
+wurde. Der Geruch der Kartoffeln, die man aus der Erde grub, und
+ihr Geruch, wenn man sie gekocht hatte und mit Salz aß. Und der
+sonnig-staubige, uralte Geruch von Stroh und Heu in der Scheune,
+wenn man nachmittags in der offenen Tür auf dem Boden saß und
+las.
+Die Frau hat versucht, ihren Mann zu töten. Der Satz ihres Vaters,
+den er so oft wiederholt hatte, klang in ihr nach. Die Frau hat
+versucht, ihren Mann zu töten. Sie ist gefährlich.
+Sally dachte an den Tag, als sie vergessen hatte, den Brief zu
+schreiben. Sie dachte an das Reh, das sie überfahren hatten. Sie
+dachte an die Pistole, die Liss in einer Blechkiste auf dem Traktor
+hatte. Dann setzte sie die Verschlusskappe sorgfältig auf den Edding
+und ließ ihren Kopf auf den Tisch fallen.
+</p>
+  </div>
+
+  <div class="frage-box">
+    <p><strong>Warum vermisst Sally den Hof so sehr?</strong></p>
+    <textarea rows="8" placeholder="Deine Gedanken hier eingeben..."></textarea>
+  </div>
+
+  <div class="zusammenfassung">
+    <p>Rückblick: Liss erinnert sich an die Zeit in Frankreich mit ihrem Sohn. Freiheit, Hitze, das einfache Leben in einem Bus. Es war die glücklichste Zeit ihres Lebens. Es war einfach, arm, und voller echter Gegenwart. Die Leere, die Sallys Abwesenheit und der Verrat hinterlassen, lähmt Liss. Selbst ihre geliebte Arbeit gibt ihr keinen Halt mehr. Am Ende fühlt sie sich innerlich ausgebrannt, leer und wertlos.</p>
+  </div>
+
+  <div class="sticky-note">
+    <p>Und so fühlte sie sich jetzt innen an. Als ob alles aus ihr geflossen
+wäre und in ihr eine Wüste aus Schlamm wäre. Aus der all das
+hässlich und schroff und überwachsen herausragte, was sonst unter
+der glitzernden Oberfläche des Wassers verborgen lag. All das, was in
+einem auf den Grund sinkt und dort fault und modert. Alles war aus
+ihr herausgeflossen, und sie war leer bis auf den stinkenden
+Bodensatz. Sie drehte sich im Weinkeller um ihre eigene Achse und
+dachte: Wäre ich ein Fass, ich würde mich wegwerfen. Da kannst du
+keinen Wein mehr einfüllen. Das kriegst du nie wieder sauber.
+Wahllos zog sie zwei Flaschen Wein aus den Regalen, stieg hoch in
+die Küche und begann zu trinken, und sie hätte nicht sagen können,
+ob der Wein schmeckte oder nicht. Es war nur der verzweifelte
+Versuch, irgendetwas in die große Leere in ihr zu gießen.
+</p>
+  </div>
+
+  <div class="frage-box">
+    <p><strong>Wie beschreibt Liss ihr Gefühl der inneren Leere? Was ist ihre größte Angst?</strong></p>
+    <textarea rows="8" placeholder="Deine Gedanken hier eingeben..."></textarea>
+  </div>
+
+  <div class="zusammenfassung">
+    <p>Sally will die Wahrheit über Liss herausfinden und beginnt auf eigene Faust zu recherchieren. Ihre Suche im Internet bringt sie nicht weiter, also fährt sie in ein Archiv und wälzt stundenlang Mikrofilme alter Zeitungen. Getrieben von Zweifel, Neugier und einem unbestimmten Gefühl von Loyalität durchsucht sie hunderte Gerichtsberichte bis sie ihn findet: den Artikel über den versuchten Mord. Der Bericht erschüttert sie. Liss soll ihren Mann mit einem gezielten Messerstich töten wollen – kalt und entschlossen, behauptet der Staatsanwalt. Doch Liss schwieg damals vor Gericht. Für Sally passt dieses Bild nicht zu der Frau, bei der sie sich zum ersten Mal zu Hause gefühlt hatte. 
+  Und gerade dieses Schweigen lässt neue Fragen aufkommen: Was war wirklich passiert? Warum lebte Liss noch auf dem Hof? Warum hatte sie das alles nicht hinter sich gelassen? Und: Wie viel Wahrheit lag überhaupt in diesem alten Artikel?
+  </p>
+  </div>
+
+  <div class="frage-box">
+    <p><strong>Wie schätzt du die Situation ein?</strong></p>
+    <textarea rows="8" placeholder="Deine Gedanken hier eingeben..."></textarea>
+  </div>
+
+  <div class="zusammenfassung">
+    <p>  Sally zweifelt an der Darstellung im Artikel und versucht, das Bild von Liss mit dem, was sie erlebt hat, in Einklang zu bringen. Die Erinnerung an gemeinsame Momente auf dem Hof steht dabei im Kontrast zur Vorstellung von einem Tatort.
+  </p>
+  </div>
+  
+
+  <div class="sticky-note">
+    <p>Sie sollte das sehen. Sie sollte das sehen und es so schön finden
+wie ich. Sie sollte neben mir sitzen und das sehen, weil sie gemacht
+hat, dass ich dieses Rot überhaupt erst wahrnehmen kann.
+Es war eigenartig, sich das einzugestehen. Sally saß ganz still. Die
+Bäume waren längst weg. Die Vorstadt rückte an die Bahnstrecke
+heran, immer näher und schloss sie schließlich ein. Die
+backsteinernen, hässlichen Rückseiten der Häuser flogen vorbei. Wieein Gefängnis, dachte sie, und dann versuchte sie, sich vorzustellen,
+wie man acht Jahre in so einem Haus saß. Auf der anderen Seite der
+Mauer, und man konnte die Züge nur hören.
+Acht Jahre lang.
+Acht Jahre lang keinen roten Ahorn im Herbst.
+Als sie aus dem Zug stieg, wusste sie, was zu tun war.
+</p>
+  </div>
+
+
+
+<div class="zusammenfassung">
+    <p>Als Sally den Zug verlässt, hat sie ihre Entscheidung getroffen. Sie wird nicht einfach zur Tagesordnung übergehen. Jetzt weiß sie, was zu tun ist.</p>
+  </div>
+  
+  <div class="frage-box">
+    <p><strong>Was erkennt Sally im Zug? Was ist ihre Entscheidung?</strong></p>
+    <textarea rows="8" placeholder="Deine Gedanken hier eingeben..."></textarea>
+  </div>
+
+
+  <!-- <div class="zusammenfassung">
+    <p>Liss fährt mit Sonny und dem gemeinsamen Sohn Peter an den Waldsee, ein Ort voller Erinnerungen an frühere Freiheit und Liebe. Doch die Stimmung kippt, als Sonny aus dem Nichts Peter schlägt und auch Liss ohrfeigt. Für Liss wird klar: Von dem Mann, den sie einst liebte, ist nichts geblieben.
+
+Tief verletzt flüchtet sie sich in Hofarbeiten, doch alles erscheint ihr sinnlos. Der Verlust von Sally und die Gewalt von Sonny haben sie innerlich gebrochen, sie fühlt sich leer und kraftlos. 
+</p>
+  </div>
+
+  <div class="frage-box">
+    <p><strong>Was hat Liss dazu gebracht, diesen letzten Brief zu schreiben? Welche Erfahrungen führten zu dieser Entscheidung?</strong></p>
+    <textarea rows="8" placeholder="Deine Gedanken hier eingeben..."></textarea>
+  </div>
+
+  <div class="zusammenfassung">
+    <p>Liss spürt noch das Brennen auf der Wange, wo Sonnys Hand sie getroffen hat. Sie hilft dem Kind aus dem Wasser, hält ihn fest, während er hustet. Sonny steht einfach da. Fremd. Kalt. Wie einer, den sie nie gekannt hat. Und vielleicht stimmt das sogar.
+Später, als sie durch den Hof geht, die Werkzeuge an ihren Platz räumt, den Besen, die Gabel, die Karre – wirkt alles wie eine Choreografie, die sie schon hundertmal getanzt hat. Nur dass heute niemand zusieht. Niemand mehr da ist, der zählt. Aber in ihr ist nichts mehr heil. Die Wut hat sich verzogen wie Nebel nach Regen.
+Drinnen am Schreibtisch zittert ihre Hand nicht, als sie das leere Blatt nimmt. Auch das hat sie oft getan. Schreiben, wenn nichts anderes hilft. Aber diesmal ist es kein Versuch, etwas zu ordnen oder festzuhalten. Es ist ein Ende. Ein stiller Schlussstrich, der niemanden retten wird nicht sie, nicht Peter, nicht das Mädchen, das fort ist.
+</p>
+  </div>
+
+    <div class="sticky-note">
+    <p>Lieber Peter, begann sie, das ist mein letzter Brief an Dich.
+</p>
+  </div>
+
+    <div class="frage-box">
+    <p><strong>Ende oder Neuanfang? Welche Zeichen der Hoffnung und Verbindung siehst du?</strong></p>
+    <textarea rows="8" placeholder="Deine Gedanken hier eingeben..."></textarea>
+  </div> -->
+
+  <div class="zusammenfassung">
+    <p>Sally schwänzt die Schule – zum ersten Mal mit einer klaren Haltung:</p>
+  </div>
+
+
+      <div class="sticky-note">
+    <p>»Ich gehe heute nicht.«
+»Was?«
+Es war deutlich zu sehen, dass Brettschneider mit so einer Antwort
+überfordert war.
+»Was meinst du, ich gehe heute nicht?«
+»Der Satz war nicht so schwierig, oder?« Sally spürte, wie es heiß
+in ihr hochstieg, aber sie beherrschte sich. »Da war nicht mal ein
+Komma drin oder so. Ich gehe heute nicht. Es gibt manchmal
+Wichtigeres als die Schule.«
+
+</p>
+  </div>
+
+
+<div class="zusammenfassung">
+    <p>Ihr Ziel: Liss. Als sie den Hof leer vorfindet und tote Hühner entdeckt, spürt sie sofort: Etwas stimmt nicht. In Panik sucht sie das ganze Haus ab und erkennt schließlich, dass Liss mit dem Fahrrad unterwegs sein muss. Verzweifelt fährt Sally mit dem alten Motorrad zum Beinhaus, dem einzigen Ort, den sie mit Liss’ Geschichte verbindet.
+Dort findet sie sie tatsächlich: in der Gruft, mit der Pistole im Schoß. Sally entreißt ihr die Waffe, schreit, bleibt bei ihr, obwohl Liss sie fortschickt. Und dann bricht Sallys wichtigste Erkenntnis hervor:
+</p>
+  </div>
+
+  <div class="sticky-note">
+    <p>»Dann … dann wächst es eben schief zusammen und tut immer ein
+bisschen weh. Aber besser, es tut weh, als … als so zu sein wie die!«
+Sie nahm die Stirn nicht weg. Sie presste sie gegen Liss’ Kopf. Liss
+konnte nicht ausweichen, ihr Hinterkopf lag an der Mauer.
+»Ich gehe hier nicht raus, bis du mitkommst. Ich gehe hier nicht
+weg ohne dich.«
+Plötzlich stieß Liss sie mit Gewalt von sich und stand auf.
+»Wie? Wie soll ich denn leben?«, schrie sie. »Für was?«
+Sally lag auf dem Boden. Schon wieder.
+»Scheiße«, fluchte sie. Und dann schrie sie auch.
+»Für mich.«
+</p>
+  </div>
+
+  <div class="frage-box">
+    <p><strong>Was zeigt die Szene darüber, wie Liebe und Verantwortung sich in extremen Momenten äußern können?</strong>
+    <textarea rows="8" placeholder="Deine Gedanken hier eingeben..."></textarea>
+  </div>
+
+  <div class="frage-box">
+  <h3>Wie bewertest du Sallys Verhalten?</h3>
+  <div style="margin: 1em 0;">
+    <button onclick="zeigeAntwortBeinhaus('a')" style="padding: 10px; margin: 0.5em; border-radius: 8px;">Mutig</button>
+    <button onclick="zeigeAntwortBeinhaus('b')" style="padding: 10px; margin: 0.5em; border-radius: 8px;">Verzweifelt</button>
+    <button onclick="zeigeAntwortBeinhaus('c')" style="padding: 10px; margin: 0.5em; border-radius: 8px;">Notwendig</button>
+  </div>
+  <p id="antwort-beinhaus-feedback" style="font-style: italic; color: #555;"></p>
+</div>
+
+<script>
+  function zeigeAntwortBeinhaus(wahl) {
+    let feedback = document.getElementById("antwort-beinhaus-feedback");
+    if (wahl === "a") {
+      feedback.innerText = "Mutig – sie stellt sich der Vergangenheit, obwohl es wehtut.";
+    } else if (wahl === "b") {
+      feedback.innerText = "Verzweifelt – es wirkt wie ein innerer Ausbruch, ein letzter Versuch, sich zu spüren.";
+    } else if (wahl === "c") {
+      feedback.innerText = "Notwendig – vielleicht war genau dieser Moment ein Wendepunkt für sie.";
+    }
+  }
+</script>
+
+
+  <div class="zusammenfassung">
+    <p>Nach der Nacht im Beinhaus erwacht Liss wie benommen alles um sie herum wirkt fremd. Sally ist noch da, hat Tee gekocht und Brot besorgt. Zwischen den beiden herrscht zunächst Unsicherheit, doch Sallys stille Fürsorge und ihre ruhige Präsenz holen Liss langsam zurück ins Leben.</p>
+  </div>
+
+  <div class="frage-box">
+    <p><strong>Welche Zeichen deuten darauf hin, dass zwischen Sally und Liss eine neue, veränderte Verbindung entsteht?</strong> 
+    <textarea rows="8" placeholder="Deine Gedanken hier eingeben..."></textarea>
+  </div>
+
+
+  <div class="frage-box">
+    <p><strong>Was bedeutet dieses stille Frühstück für die beiden? </strong> 
+    <textarea rows="8" placeholder="Deine Gedanken hier eingeben..."></textarea>
+  </div>
+
+  <div class="zusammenfassung">
+    <p>Sally: Es ist, als würde sich die Welt noch einmal neu drehen. Wir sitzen schweigend auf dem Traktor, die Reifen rollen durchs kühle Abendlicht, das Dorf taucht am Horizont auf und zwischen uns ist alles gesagt, auch wenn kaum Worte fallen.
+Vor wenigen Tagen noch lag Liss mit einer Pistole im Karner, bereit, alles zu beenden. Jetzt aber? Jetzt steht sie vor mir, riecht nach Trauben und Feuer und sagt mit diesem kleinen, entschlossenen Lächeln:
+  </p>
+  </div>
+
+   <div class="sticky-note">
+    <p>»Wir können Kaffee trinken, bevor wir zurückfahren.«
+Sally schüttelte nur den Kopf, aber sie war erleichtert. Es gab ein
+Später. Blöder Gedanke, aber er war trotzdem da gewesen. Es kam
+doch nicht auf den Ort an, sondern auf den Menschen, der den Ort
+prägte. Und die Liss, die neben ihr das Rad schob, war nicht mehr
+die Liss, die sie im Karner gefunden hatte.
+»Hoffentlich ist es noch da«, sagte sie, um etwas zu sagen.
+Liss hielt plötzlich an und drehte sich zu ihr.
+»Ich hab gestern getanzt«, sagte sie ruhig, und dann trat ein ganz
+kleines Lächeln in ihre Mundwinkel. »In meinen Haaren ist immer
+noch Zucker. Ich bringe mich heute nicht um. Wir holen bloß ein
+Fahrrad.«
+</p>
+  </div>
+
+  <div class="frage-box">
+    <p><strong> Wie spiegelt sich die Veränderung von Liss und Sally in dieser Szene?</strong> 
+    <textarea rows="8" placeholder="Deine Gedanken hier eingeben..."></textarea>
+  </div>
+
+  <div class="zusammenfassung">
+    <p>Liss war still, aber es war kein schweres Schweigen mehr. Sie war nicht mehr die, die ich im Karner gefunden hatte und ich nicht mehr das Mädchen, das sie dort rausgezerrt hatte. Wir waren hoch zur Ruine gestiegen, standen am Bogenfenster, als sie sagte:
+„Schau.“ Und ich sah ein ganzes Land unter uns, als würde es uns gehören. Später, als wir nebeneinander durch den Herbst rollten, sagte sie plötzlich:
+</p>
+  </div>
+
+
+
+  <div class="sticky-note">
+    <p>»Du verstehst nicht! Ich will, dass du immer wiederkommen
+kannst. Aber ich will nicht, dass du bleibst, weil du bleiben musst.
+Schau mich an! Hast du nichts verstanden? Ich habe bleiben müssen.
+Ich will aber nicht, dass das für dich so ist. Ich will doch genau das
+Gegenteil – dass du deine Freiheit behalten kannst, die du hast! Du
+hast … du bist unglaublich stark. Das ist es, was du behalten musst!
+Du bist stark genug, nach Hause zu deinen Eltern zu gehen. Die
+Schule fertig zu machen. Selbst zu entscheiden, wann du zu mir
+kommst und wann es Zeit ist zu gehen. Verstehst du das? Wer soll es
+dir sagen außer mir? Wem sollst du das glauben außer mir?«
+</p>
+  </div>
+
+    <div class="frage-box">
+    <p><strong>Was bedeutet echte Freiheit in Beziehungen? Kennst du Situationen, in denen Loslassen mehr Stärke erfordert als Festhalten?</strong> 
+    <textarea rows="8" placeholder="Deine Gedanken hier eingeben..."></textarea>
+  </div>
+
+  <div class="frage-box">
+  <h3>Wie bewertest du Liss’ Wunsch, dass Sally ihre Freiheit behält? Ist es ein Zeichen von Liebe, Reife oder Angst – oder von allem zugleich?</h3>
+  <div style="margin: 1em 0;">
+    <button onclick="zeigeAntwortFreiheit('a')" style="padding: 10px; margin: 0.5em; border-radius: 8px;">Liebe</button>
+    <button onclick="zeigeAntwortFreiheit('b')" style="padding: 10px; margin: 0.5em; border-radius: 8px;">Reife</button>
+    <button onclick="zeigeAntwortFreiheit('c')" style="padding: 10px; margin: 0.5em; border-radius: 8px;">Angst</button>
+    <button onclick="zeigeAntwortFreiheit('d')" style="padding: 10px; margin: 0.5em; border-radius: 8px;">Alles zugleich</button>
+  </div>
+  <p id="antwort-freiheit-feedback" style="font-style: italic; color: #555;"></p>
+</div>
+
+<script>
+  function zeigeAntwortFreiheit(wahl) {
+    let feedback = document.getElementById("antwort-freiheit-feedback");
+    if (wahl === "a") {
+      feedback.innerText = "Liebe – manchmal zeigt sie sich gerade darin, jemanden gehen zu lassen.";
+    } else if (wahl === "b") {
+      feedback.innerText = "Reife – wer die Freiheit des anderen achtet, nimmt sich selbst zurück.";
+    } else if (wahl === "c") {
+      feedback.innerText = "Angst – vielleicht fürchtet sich Liss vor Nähe, Verletzung oder Verantwortung.";
+    } else if (wahl === "d") {
+      feedback.innerText = "Vielleicht ist es genau das: ein komplexer, widersprüchlicher Ausdruck von allem.";
+    }
+  }
+</script>
+
+
+
+
+
+    <div class="zusammenfassung">
+    <p>Und ich wusste: Das ist Liebe. Nicht, jemanden festzuhalten, sondern ihn ziehen zu lassen, weil man an ihn glaubt. Sie rasten die Landstraße hinunter, als würden wir dem Leben entgegenfahren, Jacken flatternd, Puls im Takt der Reifen. Ich schrie:
+„Schneller!“ – und sie lachte. Endlich lachte sie. Und dann, im Hof, als die Dämmerung alles weich machte und es nach Walnuss duftete, sagte die alte Anni nur:
+</p>
+  </div>
+
+    <div class="sticky-note">
+    <p>
+»Ihr passt’s aufeinander auf, ja!«, sagte sie mit ihrer brüchigen
+alten Stimme, und es war eigentlich keine Frage.
+»Ja«, sagte Sally.
+»Ja«, sagte Liss.Die Anni stieg ab, lehnte das Fahrrad bedächtig gegen den Zaun,
+bückte sich und hob eine Walnuss auf.
+»Wie ich gesagt hab«, meinte sie dann zufrieden wie zu sich selbst,
+als sie wieder auf ihr Rad stieg, »ein schöner Herbst.«
+</p>
+  </div>
+
+  <div class="frage-box">
+    <p><strong>Warum ist Annis Satz ein passender Abschluss für die Geschichte?</strong></p>
+    <textarea rows="8" placeholder="Deine Gedanken hier eingeben..."></textarea>
+  </div>
+
+  <div class="mood-tracker" style="margin-top: 2em; padding: 1em; border-radius: 10px; border: 1px solid #ccc; background-color: #f9f9f9;">
+  <p><strong>Wie fühlst du dich nach diesem Kapitel?</strong></p>
+  <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+    <button onclick="markMood('😊', 'mood-feedback-rueckkehr')">😊 Gut</button>
+    <button onclick="markMood('😐', 'mood-feedback-rueckkehr')">😐 Neutral</button>
+    <button onclick="markMood('😢', 'mood-feedback-rueckkehr')">😢 Traurig</button>
+    <button onclick="markMood('😠', 'mood-feedback-rueckkehr')">😠 Wütend</button>
+    <button onclick="markMood('🤔', 'mood-feedback-rueckkehr')">🤔 Nachdenklich</button>
+  </div>
+  <p id="mood-feedback-rueckkehr" style="margin-top: 1em; font-style: italic; color: #555;"></p>
+</div>
+
+</section>
+
+
+<!-- Feedback & Speichern -->
+  <section id="Feedback" class="kapitel">
+    <h2>📥 Feedback & Speichern</h2>
+    <p>Du hast nun die Lesemappe bearbeitet. Wenn du möchtest, kannst du deine Antworten jetzt speichern:</p>
+  
+    <div class="info-box frage-box">
+      <h3>🗯️ Wie hat dir die Lesemappe gefallen?</h3>
+      <label><input type="radio" name="feedback-lesemappe" value="sehr gut"> sehr gut</label><br>
+      <label><input type="radio" name="feedback-lesemappe" value="gut"> gut</label><br>
+      <label><input type="radio" name="feedback-lesemappe" value="ganz ok"> ganz ok</label><br>
+      <label><input type="radio" name="feedback-lesemappe" value="überhaupt nicht"> überhaupt nicht</label>
+    </div>
+  
+    <div class="info-box frage-box">
+      <h3>📚 Haben dir die Textausschnitte gefallen? Warum / warum nicht?</h3>
+      <textarea rows="8" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 1em;"></textarea>
+    </div>
+  
+    <div class="info-box frage-box">
+      <h3>📖 Würdest du das Buch gerne ganz lesen?</h3>
+      <label><input type="radio" name="feedback-ganzlesen" value="JA"> JA</label><br>
+      <label><input type="radio" name="feedback-ganzlesen" value="NEIN"> NEIN</label>
+    </div>
+  
+    <div class="info-box frage-box">
+      <h3>💬 Hast du sonst noch Feedback für mich?</h3>
+      <textarea rows="8" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 1em;"></textarea>
+    </div>
+  
+    <div class="info-box frage-box">
+      
+      <p><strong>Bitte speichere jetzt deine Antworten unten!</strong></p>
+      <p>Dann hast du es jetzt geschafft! 🥳</p>
+      <p>Vielen Dank nochmal, dass du meine Mappe ausgewählt hast.<br>
+      Ich wünsche dir alles Gute für die Zukunft! 🍀</p>
+    </div>
+
+    <div class="save-buttons">
+  <button class="speicher-button" onclick="speichereAlsHTML()">HIER SPEICHERN❗</button>
+</div>
+
+<!--   
+    <div class="save-buttons">
+      <button onclick="speichereAlsHTML()"> HIER SPEICHERN❗</button>
+
+    </div> -->
+
+  </section>
+  
+
+<!-- Weitere Kapitel -->
+<section id="einstieg" class="kapitel"><h2>Einstiegsaufgabe</h2><p>Hier kannst du deine Gedanken zum Buchcover oder dem Titel äußern.</p></section>
+<section id="Ankunft" class="kapitel"><h2>Ankunft</h2><p>Inhalt und Aufgaben zu Kapitel 1 folgen hier.</p></section>
+<section id="Annäherung" class="kapitel"><h2>Kapitel 2</h2><p>Inhalt und Aufgaben zu Kapitel 2 folgen hier.</p></section>
+<section id="Vertrauen" class="kapitel"><h2>Kapitel 3</h2><p>Inhalt und Aufgaben zu Kapitel 3 folgen hier.</p></section>
+<section id="Rückkehr" class="kapitel"><h2>Kapitel 4</h2><p>Inhalt und Aufgaben zu Kapitel 4 folgen hier.</p></section>
+<section id="Feedback" class="kapitel"><h2>Feedback & Speichern</h2></section>
+<div id="kapitel-controls">
+    <button onclick="vorherigesKapitel()">◀ Zurück</button>
+    <button onclick="naechstesKapitel()">Weiter ▶</button>
+  </div>
+  
+
+<!-- JavaScript --><script>
+  const kapitelReihenfolge = ['start', 'infos', 'einstieg', 'Ankunft', 'Annäherung', 'Vertrauen', 'Rückkehr', 'Feedback'];
+  let aktuellesKapitel = 0;
+
+  function starteLesemappe() {
+    zeigeKapitel('infos');
+    document.getElementById('kapitel-navigation').style.display = 'block';
+    document.getElementById('kapitel-controls').style.display = 'block';
+  }
+
+  function zeigeKapitel(id) {
+    const neuesKapitel = document.getElementById(id);
+    const aktivesKapitel = document.querySelector('.kapitel.active');
+    if (aktivesKapitel && aktivesKapitel !== neuesKapitel) {
+      aktivesKapitel.classList.remove('active');
+      aktivesKapitel.classList.add('kapitel-fade-out');
+      setTimeout(() => {
+        aktivesKapitel.classList.remove('kapitel-fade-out');
+        neuesKapitel.classList.add('active');
+      }, 300);
+    } else {
+      neuesKapitel.classList.add('active');
+    }
+    aktuellesKapitel = kapitelReihenfolge.indexOf(id);
+  }
+
+  function naechstesKapitel() {
+    if (aktuellesKapitel < kapitelReihenfolge.length - 1) {
+      aktuellesKapitel++;
+      zeigeKapitel(kapitelReihenfolge[aktuellesKapitel]);
+    }
+  }
+
+  function vorherigesKapitel() {
+    if (aktuellesKapitel > 0) {
+      aktuellesKapitel--;
+      zeigeKapitel(kapitelReihenfolge[aktuellesKapitel]);
+    }
+  }
+
+  function allowDrop(ev) {
+    ev.preventDefault();
+  }
+
+  function drag(ev) {
+    ev.dataTransfer.setData("text", ev.target.id);
+  }
+
+  function drop(ev) {
+    ev.preventDefault();
+    const data = ev.dataTransfer.getData("text");
+    const draggedElement = document.getElementById(data);
+    ev.target.closest('.dropzone').appendChild(draggedElement);
+  }
+
+  function speichereAlsHTML() {
+    document.querySelectorAll("textarea").forEach(feld => {
+      feld.innerHTML = feld.value;
+    });
+
+    const docClone = document.documentElement.cloneNode(true);
+    const doctype = '<!DOCTYPE html>';
+    // NICHTS entfernen, damit Navigation und Interaktion erhalten bleiben
+
+
+    const html = `<!DOCTYPE html>
+<html lang="de">
+<head><meta charset="UTF-8"><title>Lesemappe Antworten</title></head>
+` + docClone.innerHTML + `</html>`;
+
+    const blob = new Blob([html], { type: "text/html;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "Lesemappe_Gespeichert.html";
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+</script>
+
+
+<script>
+  function markMood(mood, feedbackId) {
+    const output = document.getElementById(feedbackId);
+    if (output) {
+      output.innerText = "Du hast dich für " + mood + " entschieden.";
+    }
+  }
+</script>
+
+
+
+<script>
+  // Drag-and-Drop Funktionen
+  function allowDrop(ev) {
+    ev.preventDefault();
+  }
+
+  function drag(ev) {
+    ev.dataTransfer.setData("text", ev.target.id);
+  }
+
+  function drop(ev) {
+    ev.preventDefault();
+    var data = ev.dataTransfer.getData("text");
+    ev.target.appendChild(document.getElementById(data));
+  }
+
+  // Memory-Spiel
+  const symbols = [
+    "🐝", "🐝",     // Bienen
+    "📦", "📦",     // Karton (mit Büchern)
+    "🪞", "🪞",     // Spiegel
+    "🚲", "🚲",     // Fahrrad
+    "📖", "📖",     // Buch
+    "🍯", "🍯",     // Honig
+    "🪓", "🪓",     // Werkzeug aus Speisekammer
+    "🖋️", "🖋️"     // Schreiben / Brief
+  ];
+
+  let shuffled = symbols.sort(() => 0.5 - Math.random());
+  let board = document.getElementById("memory-board");
+  let message = document.getElementById("memory-message");
+
+  let first = null;
+  let second = null;
+  let lock = false;
+  let matchedPairs = 0;
+
+  shuffled.forEach((symbol, index) => {
+    let card = document.createElement("div");
+    card.classList.add("memory-card");
+    card.dataset.symbol = symbol;
+    card.dataset.index = index;
+    card.innerHTML = "❓";
+    card.style.cssText = `
+      background-color: white;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      font-size: 2em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100px;
+      cursor: pointer;
+    `;
+    board.appendChild(card);
+
+    card.addEventListener("click", () => {
+      if (lock || card === first || card.innerHTML !== "❓") return;
+
+      card.innerHTML = card.dataset.symbol;
+
+      if (!first) {
+        first = card;
+      } else {
+        second = card;
+        lock = true;
+
+        if (first.dataset.symbol === second.dataset.symbol) {
+          matchedPairs++;
+          first = second = null;
+          lock = false;
+          if (matchedPairs === symbols.length / 2) {
+            message.innerText = "🎉 Super! Du hast alle Paare gefunden.";
+          }
+        } else {
+          setTimeout(() => {
+            first.innerHTML = "❓";
+            second.innerHTML = "❓";
+            first = second = null;
+            lock = false;
+          }, 1000);
+        }
+      }
+    });
+  });
+</script>
+
+
+
+</body>
+</html>
